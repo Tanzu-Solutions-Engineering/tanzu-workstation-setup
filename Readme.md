@@ -1,34 +1,27 @@
-# Workstation Setup
+# Windows Tanzu Workstation Setup
 
-Get Windows 10 ISO: https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise
-Using the windows server jumpbox, upload the ISO to vCenter
-Create new VM, Win 10 64-bit
-  4 core, 16 GB RAM, 200 GB Disk
-  Under CPU choose "Expose hardware assisted virtualization to the guest OS"
-Bood VM from ISO disk and run through setup.  Use domain account.  cody / KeepItSimple1!
-Install VM Tools
-Set IP to address in static range
-Enable remote access: https://networking.grok.lsu.edu/Article.aspx?articleid=18609
+The following cheatsheet supports applications and utilities helpful for developer and operations (might I say devops) team members working with Tanzu.
 
-Now Remote Desktop to IP address
+The apps listed collected and used form a completely fresh Windows workstation.  See notes on ceating the Windows 10 VM at the bottom.
 
-Chrome - 
+## Applications and Utities
 
-Install Git => https://git-scm.com/download/win
+Chrome - https://www.google.com/chrome
 
-Install VS Code => https://code.visualstudio.com/download
+Install Git - https://git-scm.com/download/win
+
+Install VS Code - https://code.visualstudio.com/download
   Enable auto save (File->Auto Save)
 
 Install Windows Subsystem for Linux 2 - https://docs.microsoft.com/en-us/windows/wsl/wsl2-kernel
 
-Docker - https://docs.docker.com/docker-for-windows/install/
+Install Docker - https://docs.docker.com/docker-for-windows/install/
 
-https://docs.microsoft.com/en-us/windows/wsl/wsl2-kernel
+Install Filezilla - https://filezilla-project.org/download.php?platform=win64
 
-Filezilla - https://filezilla-project.org/download.php?platform=win64
-7-zip - https://www.7-zip.org/
+Install 7-zip - https://www.7-zip.org/
 
-TKG - https://www.vmware.com/go/get-tkg
+Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
   tkg cli
     Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
   kubectl cli
@@ -36,7 +29,6 @@ TKG - https://www.vmware.com/go/get-tkg
   ova's
   tkg extensions
   tkg connectivity api
-
 
 Create %USERPROFILE%/bin directory
 Add %USERPROFILE%/bin to path
@@ -74,11 +66,23 @@ unzip pack-v0.14.2-windows.zip
 mv pack.exe ~/bin/
 rm pack*
 
-
 pivnet download-product-files --product-slug='build-service' --release-version='1.0.2' --product-file-id=773507 --download-dir ~/bin
 mv ~/bin/kp-windows-0.1.1.exe ~/bin/kp.exe
 ```
 
-JDK - https://adoptopenjdk.net/releases.html
+Install JDK - https://adoptopenjdk.net/releases.html
     JDK 11, Windows x86, msi
     In the installer choose to set JAVA_HOME variable
+
+## Create Windows 10 Virtual Machine (Optional)
+
+- Get Windows 10 ISO: https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise
+- Using the windows server jumpbox, upload the ISO to vCenter
+- Create new VM, Win 10 64-bit
+  - 4 core, 16 GB RAM, 200 GB Disk
+  - Under CPU choose "Expose hardware assisted virtualization to the guest OS"
+- Boot VM from ISO disk and run through setup.  Use domain account.  USERNAME / PASSWORD
+- Install VM Tools
+- Set IP to address in static range
+- Enable remote access: https://networking.grok.lsu.edu/Article.aspx?articleid=18609
+- Now Remote Desktop to IP address
