@@ -48,12 +48,14 @@ Create %USERPROFILE%/workspace/workstation-setup directory
 Open VS COde to that directory
 Set Git Bash as default terminal
 
+```bash
 curl -L -o ~/bin/ytt.exe https://github.com/k14s/ytt/releases/download/v0.30.0/ytt-windows-amd64.exe
 curl -L -o ~/bin/kapp.exe https://github.com/k14s/kapp/releases/download/v0.34.0/kapp-windows-amd64.exe
 curl -L -o ~/bin/kbld.exe https://github.com/k14s/kbld/releases/download/v0.26.0/kbld-windows-amd64.exe
 curl -L -o ~/bin/pivnet.exe https://github.com/pivotal-cf/pivnet-cli/releases/download/v2.0.1/pivnet-windows-amd64-2.0.1
 curl -L -o ~/bin/yq.exe https://github.com/mikefarah/yq/releases/download/3.4.1/yq_windows_amd64.exe
 curl -L -o ~/bin/tmc.exe https://vmware.bintray.com/tmc/0.2.0-b11584d8/windows/x64/tmc.exe
+curl -L -o ~/bin/jq.exe https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe
 
 curl -LO https://get.helm.sh/helm-v3.4.0-rc.1-windows-amd64.zip
 unzip helm-v3.4.0-rc.1-windows-amd64.zip 
@@ -75,6 +77,8 @@ rm pack*
 
 pivnet download-product-files --product-slug='build-service' --release-version='1.0.2' --product-file-id=773507 --download-dir ~/bin
 mv ~/bin/kp-windows-0.1.1.exe ~/bin/kp.exe
+```
 
 JDK - https://adoptopenjdk.net/releases.html
     JDK 11, Windows x86, msi
+    In the installer choose to set JAVA_HOME variable
