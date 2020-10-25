@@ -48,6 +48,7 @@ curl -L -o ~/bin/pivnet.exe https://github.com/pivotal-cf/pivnet-cli/releases/do
 curl -L -o ~/bin/yq.exe https://github.com/mikefarah/yq/releases/download/3.4.1/yq_windows_amd64.exe
 curl -L -o ~/bin/tmc.exe https://vmware.bintray.com/tmc/0.2.0-b11584d8/windows/x64/tmc.exe
 curl -L -o ~/bin/jq.exe https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe
+curl -L -o ~/bin/kind.exe https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64
 
 curl -LO https://get.helm.sh/helm-v3.4.0-rc.1-windows-amd64.zip
 unzip helm-v3.4.0-rc.1-windows-amd64.zip 
@@ -65,6 +66,11 @@ curl -LO https://github.com/buildpacks/pack/releases/download/v0.14.2/pack-v0.14
 unzip pack-v0.14.2-windows.zip
 mv pack.exe ~/bin/
 rm pack*
+
+curl -LO https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_windows_amd64.exe.zip
+unzip govc_windows_amd64.exe.zip
+mv govc_windows_amd64.exe ~/bin/govc.exe
+rm govc_win*
 
 pivnet download-product-files --product-slug='build-service' --release-version='1.0.2' --product-file-id=773507 --download-dir ~/bin
 mv ~/bin/kp-windows-0.1.1.exe ~/bin/kp.exe
