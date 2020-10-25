@@ -21,6 +21,10 @@ Install Filezilla - https://filezilla-project.org/download.php?platform=win64
 
 Install 7-zip - https://www.7-zip.org/
 
+Windows Terminal - Install from Microsoft Stor
+  Search and then install
+  Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
+
 Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
   tkg cli
     Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
