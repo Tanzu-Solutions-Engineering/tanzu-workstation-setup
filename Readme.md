@@ -11,32 +11,46 @@ Chrome - https://www.google.com/chrome
 Install Git - https://git-scm.com/download/win
 
 Install VS Code - https://code.visualstudio.com/download
-  Enable auto save (File->Auto Save)
+- Enable auto save (File->Auto Save)
+- Add the Kubernetes extension from Microsoft
 
 Install Windows Subsystem for Linux 2 - https://docs.microsoft.com/en-us/windows/wsl/wsl2-kernel
 
 Install Docker - https://docs.docker.com/docker-for-windows/install/
 
-Install Filezilla - https://filezilla-project.org/download.php?platform=win64
+Install WinSCP - https://winscp.net/eng/download.php
 
 Install 7-zip - https://www.7-zip.org/
 
-Windows Terminal - Install from Microsoft Stor
-  Search and then install
-  Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
+Install Python - Install from Microsoft Store
+- Search and then install
+- Note: Only seems to work in powershell
+
+Install HTTPie
+- Depends on Python
+```bash
+# From powershell window
+pip install --upgrade pip setuptools
+pip install --upgrade httpie
+```
+- Output of the above will suggest that you add a directory to your PATH variable.  After you so, you will be able to use HTTPie from powershell and GitBash
+
+Windows Terminal - Install from Microsoft Store
+- Search and then install
+- Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
 
 Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
-  tkg cli
-    Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
-  kubectl cli
-    Extract using 7-zip and copy kubectl.exe to ~/bin
+- tkg cli
+  - Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
+- kubectl cli
+  - Extract using 7-zip and copy kubectl.exe to ~/bin
   ova's
-  tkg extensions
-  tkg connectivity api
+- tkg extensions
+- tkg connectivity api
 
 Create %USERPROFILE%/bin directory
 Add %USERPROFILE%/bin to path
-    Enter env in search bar
+- Enter env in search bar
 
 Copy your .pivnetrc file to %USERPROFILE%/
 
@@ -76,8 +90,13 @@ unzip govc_windows_amd64.exe.zip
 mv govc_windows_amd64.exe ~/bin/govc.exe
 rm govc_win*
 
-pivnet download-product-files --product-slug='build-service' --release-version='1.0.2' --product-file-id=773507 --download-dir ~/bin
-mv ~/bin/kp-windows-0.1.1.exe ~/bin/kp.exe
+pivnet download-product-files --product-slug='build-service' --release-version='1.0.3' --product-file-id=817471 --download-dir ~/bin
+mv ~/bin/kp-windows-0.1.3.exe ~/bin/kp.exe
+
+curl -LO https://github.com/concourse/concourse/releases/download/v6.7.1/fly-6.7.1-windows-amd64.zip
+unzip fly-6.7.1-windows-amd64.zip
+mv fly.exe ~/bin/fly.exe
+rm fly-6.7.1*
 ```
 
 Install JDK - https://adoptopenjdk.net/releases.html
