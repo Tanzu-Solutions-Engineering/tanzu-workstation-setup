@@ -4,7 +4,7 @@ The following cheatsheet supports applications and utilities helpful for develop
 
 The apps listed collected and used form a completely fresh Windows workstation.  See notes on ceating the Windows 10 VM at the bottom.
 
-## Applications and Utities
+## Applications and Utilities
 
 Chrome - https://www.google.com/chrome
 
@@ -18,27 +18,6 @@ Install Windows Subsystem for Linux 2 - https://docs.microsoft.com/en-us/windows
 
 Install Docker - https://docs.docker.com/docker-for-windows/install/
 
-Install WinSCP - https://winscp.net/eng/download.php
-
-Install 7-zip - https://www.7-zip.org/
-
-Install Python - Install from Microsoft Store
-- Search and then install
-- Note: Only seems to work in powershell
-
-Install HTTPie
-- Depends on Python
-```bash
-# From powershell window
-pip install --upgrade pip setuptools
-pip install --upgrade httpie
-```
-- Output of the above will suggest that you add a directory to your PATH variable.  After you so, you will be able to use HTTPie from powershell and GitBash
-
-Windows Terminal - Install from Microsoft Store
-- Search and then install
-- Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
-
 Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
 - tkg cli
   - Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
@@ -48,15 +27,18 @@ Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
 - tkg extensions
 - tkg connectivity api
 
-Create %USERPROFILE%/bin directory
-Add %USERPROFILE%/bin to path
-- Enter env in search bar
+Create single directory to put command line utilities into your path
+- Create %USERPROFILE%/bin directory
+- Add %USERPROFILE%/bin to path
+  - Enter env in search bar, to launch the windows System Environment Variables dialog
 
-Copy your .pivnetrc file to %USERPROFILE%/
+Create a directory in your home for various git projects.  This is one of them.
+- Create %USERPROFILE%/workspace
+- git clone https://github.com/doddatpivotal/windows-tanzu-workstation.git
+- Open VS Code to that directory
+- Set Git Bash as default terminal
 
-Create %USERPROFILE%/workspace/workstation-setup directory
-Open VS COde to that directory
-Set Git Bash as default terminal
+The following can be retrieved using Git BASH...
 
 ```bash
 curl -L -o ~/bin/ytt.exe https://github.com/k14s/ytt/releases/download/v0.30.0/ytt-windows-amd64.exe
@@ -90,14 +72,40 @@ unzip govc_windows_amd64.exe.zip
 mv govc_windows_amd64.exe ~/bin/govc.exe
 rm govc_win*
 
-pivnet download-product-files --product-slug='build-service' --release-version='1.0.3' --product-file-id=817471 --download-dir ~/bin
-mv ~/bin/kp-windows-0.1.3.exe ~/bin/kp.exe
-
 curl -LO https://github.com/concourse/concourse/releases/download/v6.7.1/fly-6.7.1-windows-amd64.zip
 unzip fly-6.7.1-windows-amd64.zip
 mv fly.exe ~/bin/fly.exe
 rm fly-6.7.1*
+
+# Goto https://network.pivotal.io and register for an account if you have not done so already.  Then grab the legacy api token for your profile and use that to login with the command below
+pivnet login
+pivnet download-product-files --product-slug='build-service' --release-version='1.0.3' --product-file-id=817471 --download-dir ~/bin
+mv ~/bin/kp-windows-0.1.3.exe ~/bin/kp.exe
+
 ```
+
+## Helpful Additions
+
+Install WinSCP - https://winscp.net/eng/download.php
+
+Install 7-zip - https://www.7-zip.org/
+
+Install Python - Install from Microsoft Store
+- Search and then install
+- Note: Only seems to work in powershell
+
+Install HTTPie
+- Depends on Python
+```bash
+# From powershell window
+pip install --upgrade pip setuptools
+pip install --upgrade httpie
+```
+- Output of the above will suggest that you add a directory to your PATH variable.  After you so, you will be able to use HTTPie from powershell and GitBash
+
+Windows Terminal - Install from Microsoft Store
+- Search and then install
+- Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
 
 Install JDK - https://adoptopenjdk.net/releases.html
     JDK 11, Windows x86, msi
