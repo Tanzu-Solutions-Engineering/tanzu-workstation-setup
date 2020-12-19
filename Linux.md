@@ -26,8 +26,8 @@ https://www.vmware.com/go/get-tkg
 
 Using my workstation and then used scp to copy them to the linux jumpbox
 - tkg cli
-  - Extract, add execute bit and copy tkg to /usr/local/bin renaming them to tkg.
-  - Ignore the Carvel utilities for now, we will pickup up the public versions later.
+  - Extract, copy tkg to /usr/local/bin renaming them to tkg
+  - Copy carvel tools to /usr/local/bin and rename
 - kubectl cli
   - Extract, add execute bit copy kubectl.exe to /usr/local/bin
 - tkg extensions
@@ -36,26 +36,25 @@ From your mac workstation...
 
 ```bash
 export JUMPBOX_USER=dpfeffer
-export JUMPBOX_IP=192.167.7.77
-Download from https://www.vmware.com/go/get-tkg
-- kubectl
-- tkg
-- tkg-extensions
-scp ~/Downloads/tkg-extensions-v1.2.0-vmware.1.tar-2.gz $JUMPBOX_USER@$JUMPBOX_IP:
-scp ~/Downloads/kubectl-linux-v1.19.1-vmware.2.gz $JUMPBOX_USER@$JUMPBOX_IP:
-scp ~/Downloads/tkg-linux-amd64-v1.2.0-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
+export JUMPBOX_IP=192.168.7.77
+# Download from https://www.vmware.com/go/get-tkg
+# - kubectl
+# - tkg
+# - tkg-extensions
+scp ~/Downloads/tkg-extensions-manifests-v1.2.0-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/kubectl-linux-v1.19.3-vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/tkg-linux-amd64-v1.2.1-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
 ```
 
 From linux jumpbox...
 
 ```bash
-gunzip kubectl-linux-v1.19.1-vmware.2.gz
-chmod +x kubectl-linux-v1.19.1-vmware.2 && sudo mv kubectl-linux-v1.19.1-vmware.2 /usr/local/bin/kubectl
+gunzip kubectl-linux-v1.19.3-vmware.1.gz
+chmod +x kubectl-linux-v1.19.3-vmware.1 && sudo mv kubectl-linux-v1.19.3-vmware.1 /usr/local/bin/kubectl
 
-gunzip tkg-linux-amd64-v1.2.0-vmware.1.tar.gz
-tar -xvf tkg-linux-amd64-v1.2.0-vmware.1.tar
-chmod +x tkg/*
-sudo mv tkg/tkg-linux-amd64-v1.2.0+vmware.1 /usr/local/bin/tkg
+gunzip tkg-linux-amd64-v1.2.1-vmware.1.tar.gz
+tar -xvf tkg-linux-amd64-v1.2.1-vmware.1.tar
+sudo mv tkg/tkg-linux-amd64-v1.2.1+vmware.1 /usr/local/bin/tkg
 sudo mv tkg/imgpkg-linux-amd64-v0.2.0+vmware.1 /usr/local/bin/imgpkg
 sudo mv tkg/kapp-linux-amd64-v0.33.0+vmware.1 /usr/local/bin/kapp
 sudo mv tkg/kbld-linux-amd64-v0.24.0+vmware.1 /usr/local/bin/kbld
@@ -70,21 +69,6 @@ Create a directory in your home for various git projects.  This is one of them.
 ## Additional Apps & Utilities
 
 ```bash
-# Install ytt - https://get-ytt.io/
-curl -LO https://github.com/k14s/ytt/releases/download/v0.30.0/ytt-linux-amd64
-chmod +x ./ytt-linux-amd64
-sudo mv ytt-linux-amd64 /usr/local/bin/ytt
-
-# Install kapp - https://get-kapp.io/
-curl -LO https://github.com/k14s/kapp/releases/download/v0.34.0/kapp-linux-amd64
-chmod +x ./kapp-linux-amd64
-sudo mv kapp-linux-amd64 /usr/local/bin/kapp
-
-# Install kbld - https://get-kbld.io/
-curl -LO https://github.com/k14s/kbld/releases/download/v0.27.0/kbld-linux-amd64
-chmod +x ./kbld-linux-amd64
-sudo mv kbld-linux-amd64 /usr/local/bin/kbld
-
 # Install pivnet - https://github.com/pivotal-cf/pivnet-cli
 curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v2.0.1/pivnet-linux-amd64-2.0.1
 chmod +x ./pivnet-linux-amd64-2.0.1
@@ -96,7 +80,7 @@ pivnet login --api-token $PIVNET_API_TOKEN
 pivnet download-product-files \
   --product-slug='build-service' \
   --release-version='1.0.3' \
-  --product-file-id=817470 \
+  --product-file-id=817470
 chmod +x kp-linux-0.1.3
 sudo mv kp-linux-0.1.3 /usr/local/bin/kp
 
@@ -146,7 +130,7 @@ rm pack*
 # Install fly
 curl -LO https://github.com/concourse/concourse/releases/download/v6.7.1/fly-6.7.1-linux-amd64.tgz
 gunzip fly-6.7.1-linux-amd64.tgz
-tar -xvf fly-6.7.1-linux-amd64.tgz
+tar -xvf fly-6.7.1-linux-amd64.tar
 chmod +x fly
 sudo mv fly /usr/local/bin/
 rm fly*
