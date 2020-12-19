@@ -41,9 +41,11 @@ export JUMPBOX_IP=192.168.7.77
 # - kubectl
 # - tkg
 # - tkg-extensions
+# - velero
 scp ~/Downloads/tkg-extensions-manifests-v1.2.0-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
 scp ~/Downloads/kubectl-linux-v1.19.3-vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
 scp ~/Downloads/tkg-linux-amd64-v1.2.1-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/velero-linux-v1.4.3_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
 ```
 
 From linux jumpbox...
@@ -60,6 +62,11 @@ sudo mv tkg/kapp-linux-amd64-v0.33.0+vmware.1 /usr/local/bin/kapp
 sudo mv tkg/kbld-linux-amd64-v0.24.0+vmware.1 /usr/local/bin/kbld
 sudo mv tkg/ytt-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/ytt
 rm -rf tkg/
+
+gunzip velero-linux-v1.4.3_vmware.1.gz
+chmod +x velero-linux-v1.4.3_vmware.1
+sudo mv velero-linux-v1.4.3_vmware.1 /usr/local/bin/velero
+
 ```
 
 Create a directory in your home for various git projects.  This is one of them.
