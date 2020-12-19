@@ -90,11 +90,9 @@ sudo apt-get install jq
 # Install k9s - https://github.com/derailed/k9s
 sudo snap install k9s
 
-# per https://github.com/mikefarah/yq
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-sudo add-apt-repository ppa:rmescandon/yq
-sudo apt update
-sudo apt install yq -y
+# Install yq - per https://github.com/mikefarah/yq
+sudo wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 -O /usr/bin/yq 
+sudo chmod +x /usr/bin/yq
 
 # Install helm
 curl -LO https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
