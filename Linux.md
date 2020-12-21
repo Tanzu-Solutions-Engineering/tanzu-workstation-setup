@@ -133,9 +133,9 @@ sudo mv pack /usr/local/bin/
 rm pack*
 
 # Install fly
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.1/fly-6.7.1-linux-amd64.tgz
-gunzip fly-6.7.1-linux-amd64.tgz
-tar -xvf fly-6.7.1-linux-amd64.tar
+curl -LO https://github.com/concourse/concourse/releases/download/v6.7.2/fly-6.7.2-linux-amd64.tgz
+gunzip fly-6.7.2-linux-amd64.tgz
+tar -xvf fly-6.7.2-linux-amd64.tar
 chmod +x fly
 sudo mv fly /usr/local/bin/
 rm fly*

@@ -72,10 +72,10 @@ unzip govc_windows_amd64.exe.zip
 mv govc_windows_amd64.exe ~/bin/govc.exe
 rm govc_win*
 
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.1/fly-6.7.1-windows-amd64.zip
-unzip fly-6.7.1-windows-amd64.zip
+curl -LO https://github.com/concourse/concourse/releases/download/v6.7.2/fly-6.7.2-windows-amd64.zip
+unzip fly-6.7.2-windows-amd64.zip
 mv fly.exe ~/bin/fly.exe
-rm fly-6.7.1*
+rm fly-6.7.2*
 
 # Goto https://network.pivotal.io and register for an account if you have not done so already.  Then grab the legacy api token for your profile and use that to login with the command below
 pivnet login
