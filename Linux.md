@@ -4,6 +4,13 @@ The following cheatsheet supports applications and utilities helpful for develop
 
 The apps listed collected and used form a completely fresh Ubuntu Linux jumpbox.  See notes on creating the Ubuntu Linux VM at the bottom.
 
+Recommended size is cpu 2, ram 6GB, disk 30GB​.
+
+## VMware Tanzu Accounts
+
+- `my.vmware.com` - This is for downloading TKG. If you don't already have an account, register [here](https://my.vmware.com/web/vmware/registration).
+- `Tanzu Net` - This is for downloading Tanzu Build Service. If you don't already have an account, register [here](https://account.run.pivotal.io/z/uaa/sign-up).
+
 ## Pre-installed
 
 Git - Installed out of the box
@@ -156,7 +163,7 @@ sudo apt install openjdk-11-jdk
   - put it on Cluster1
   - Guest OS: choose Linux - Ubuntu Linux x64
   - Customize Hardware:
-    - cpu 2, ram 8GB, disk 30GB
+    - cpu 2, ram 6GB, disk 30GB
     - VM Network
     - Add a second CD Drive and choose ISO
 - Power on jumpbox
