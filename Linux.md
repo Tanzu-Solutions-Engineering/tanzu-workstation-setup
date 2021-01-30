@@ -86,10 +86,10 @@ pivnet login --api-token $PIVNET_API_TOKEN
 # Install kp - https://docs.pivotal.io/build-service
 pivnet download-product-files \
   --product-slug='build-service' \
-  --release-version='1.0.3' \
+  --release-version='1.0.4' \
   --product-file-id=817470
-chmod +x kp-linux-0.1.3
-sudo mv kp-linux-0.1.3 /usr/local/bin/kp
+chmod +x kp-linux-0.1.4
+sudo mv kp-linux-0.1.4 /usr/local/bin/kp
 
 # Install jq - https://stedolan.github.io/jq/
 sudo apt-get install jq
@@ -102,15 +102,15 @@ sudo wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64
 sudo chmod +x /usr/bin/yq
 
 # Install helm
-curl -LO https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
-gunzip helm-v3.4.1-linux-amd64.tar.gz
-tar -xvf helm-v3.4.1-linux-amd64.tar
+curl -LO https://get.helm.sh/helm-v3.5.1-linux-amd64.tar.gz
+gunzip helm-v3.5.1-linux-amd64.tar.gz
+tar -xvf helm-v3.5.1-linux-amd64.tar
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm helm*
 rm -rf linux-amd64/
 
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
@@ -133,9 +133,9 @@ sudo mv pack /usr/local/bin/
 rm pack*
 
 # Install fly
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.2/fly-6.7.2-linux-amd64.tgz
-gunzip fly-6.7.2-linux-amd64.tgz
-tar -xvf fly-6.7.2-linux-amd64.tar
+curl -LO https://github.com/concourse/concourse/releases/download/v6.7.4/fly-6.7.4-linux-amd64.tgz
+gunzip fly-6.7.4-linux-amd64.tgz
+tar -xvf fly-6.7.4-linux-amd64.tar
 chmod +x fly
 sudo mv fly /usr/local/bin/
 rm fly*
