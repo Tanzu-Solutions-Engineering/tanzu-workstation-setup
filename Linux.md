@@ -36,7 +36,7 @@ Using my workstation and then used scp to copy them to the linux jumpbox
   - Extract, copy tkg to /usr/local/bin renaming them to tkg
   - Copy carvel tools to /usr/local/bin and rename
 - kubectl cli
-  - Extract, add execute bit copy kubectl.exe to /usr/local/bin
+  - Extract, add execute bit copy kubectl to /usr/local/bin
 - tkg extensions
 
 From your mac workstation...
