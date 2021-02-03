@@ -95,8 +95,8 @@ pivnet download-product-files \
   --product-slug='build-service' \
   --release-version='1.0.4' \
   --product-file-id=817470
-chmod +x kp-linux-0.1.4
-sudo mv kp-linux-0.1.4 /usr/local/bin/kp
+chmod +x kp-linux-0.1.3
+sudo mv kp-linux-0.1.3 /usr/local/bin/kp
 
 # Install jq - https://stedolan.github.io/jq/
 sudo apt-get install jq
