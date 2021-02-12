@@ -93,10 +93,10 @@ pivnet login --api-token $PIVNET_API_TOKEN
 # Install kp - https://docs.pivotal.io/build-service
 pivnet download-product-files \
   --product-slug='build-service' \
-  --release-version='1.0.4' \
-  --product-file-id=817470
-chmod +x kp-linux-0.1.3
-sudo mv kp-linux-0.1.3 /usr/local/bin/kp
+  --release-version='1.1.1' \
+  --product-file-id=883031
+chmod +x kp-linux-0.2.0
+sudo mv kp-linux-0.2.0 /usr/local/bin/kp
 
 # Install jq - https://stedolan.github.io/jq/
 sudo apt-get install jq

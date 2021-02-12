@@ -79,8 +79,8 @@ rm fly-6.7.2*
 
 # Goto https://network.pivotal.io and register for an account if you have not done so already.  Then grab the legacy api token for your profile and use that to login with the command below
 pivnet login
-pivnet download-product-files --product-slug='build-service' --release-version='1.0.3' --product-file-id=817471 --download-dir ~/bin
-mv ~/bin/kp-windows-0.1.3.exe ~/bin/kp.exe
+pivnet download-product-files --product-slug='build-service' --release-version='1.1.1' --product-file-id=883033 --download-dir ~/bin
+mv ~/bin/kp-windows-0.2.0.exe ~/bin/kp.exe
 
 ```
 
