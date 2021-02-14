@@ -84,9 +84,9 @@ Create a directory in your home for various git projects.  This is one of them.
 
 ```bash
 # Install pivnet - https://github.com/pivotal-cf/pivnet-cli
-curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v2.0.2/pivnet-linux-amd64-2.0.2
-chmod +x ./pivnet-linux-amd64-2.0.2
-sudo mv pivnet-linux-amd64-2.0.2 /usr/local/bin/pivnet
+curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.0/pivnet-linux-amd64-3.0.0
+chmod +x ./pivnet-linux-amd64-3.0.0
+sudo mv pivnet-linux-amd64-3.0.0 /usr/local/bin/pivnet
 # Get your Pivnet API Token at the bottom of the [Pivnet Profile Page](https://network.pivotal.io/users/dashboard/edit-profile).  
 pivnet login --api-token $PIVNET_API_TOKEN
 
@@ -140,9 +140,9 @@ sudo mv pack /usr/local/bin/
 rm pack*
 
 # Install fly
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.4/fly-6.7.4-linux-amd64.tgz
-gunzip fly-6.7.4-linux-amd64.tgz
-tar -xvf fly-6.7.4-linux-amd64.tar
+curl -LO https://github.com/concourse/concourse/releases/download/v6.7.5/fly-6.7.5-linux-amd64.tgz
+gunzip fly-6.7.5-linux-amd64.tgz
+tar -xvf fly-6.7.5-linux-amd64.tar
 chmod +x fly
 sudo mv fly /usr/local/bin/
 rm fly*
