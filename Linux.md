@@ -16,15 +16,20 @@ Recommended size is cpu 2, ram 6GB, disk 30GB​.
 Git - Installed out of the box
 
 Docker - Installed through initial VM setup via Snap
-  - If not done at setup, you can rurn `sudo snap install docker`
-  - I faced an permission issue with docker and needed to follow [these steps](https://docs.docker.com/engine/install/linux-postinstall/).
-  - Note: If running with HTTP_PROXY follow these [additional instructions](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy).
+
+- If not done at setup, you can run `sudo snap install docker --classic`.  See script below.
+- I faced an permission issue with docker and needed to follow [these steps](https://docs.docker.com/engine/install/linux-postinstall/).
+- Note: If running with HTTP_PROXY follow these [additional instructions](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy).
+- Note: For some reason the snap version puts the config.json for docker in an unusual location.  The carvel tools need this file to be at ~/.docker/config.json or else it won't be able to read the auth information that stored there.  Once you do logins or modify this file, copy it to the expected location.  Each time you do an action that would edit the config, you need to re-copy.
 
 ```bash
+sudo snap install docker --classic
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
+# copy the config file from where snap puts it to where carvel tools expect it
+cp /home/ubuntu/snap/docker/*/.docker/config.json to ~/.docker/config.json
 ```
 
 ## Tanzu Kubernetes Grid Packages
@@ -105,7 +110,7 @@ sudo apt-get install jq
 sudo snap install k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 -O /usr/bin/yq 
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq 
 sudo chmod +x /usr/bin/yq
 
 # Install helm
@@ -127,7 +132,7 @@ sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.0-c81ec7fc/linux/x64/tmc
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-ded34d75/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
