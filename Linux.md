@@ -29,7 +29,8 @@ sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
 # copy the config file from where snap puts it to where carvel tools expect it
-cp /home/ubuntu/snap/docker/*/.docker/config.json to ~/.docker/config.json
+mkdir ~/.docker
+cp /home/ubuntu/snap/docker/*/.docker/config.json ~/.docker/config.json
 ```
 
 ## Tanzu Kubernetes Grid Packages
@@ -48,37 +49,40 @@ From your mac workstation...
 
 ```bash
 export JUMPBOX_USER=dpfeffer
-export JUMPBOX_IP=192.168.7.77
+export JUMPBOX_IP=192.168.7.139
 # Download from https://www.vmware.com/go/get-tkg
 # - kubectl
 # - tkg
 # - tkg-extensions
 # - velero
-scp ~/Downloads/tkg-extensions-manifests-v1.2.0-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
-scp ~/Downloads/kubectl-linux-v1.19.3-vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
-scp ~/Downloads/tkg-linux-amd64-v1.2.1-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
-scp ~/Downloads/velero-linux-v1.4.3_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/tkg-extensions-manifests-v1.3.0-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/kubectl-linux-v1.20.4-vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/tanzu-cli-bundle-linux-amd64.tar $JUMPBOX_USER@$JUMPBOX_IP:
+scp ~/Downloads/velero-linux-v1.5.3_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:
 ```
 
 From linux jumpbox...
 
 ```bash
-gunzip kubectl-linux-v1.19.3-vmware.1.gz
-chmod +x kubectl-linux-v1.19.3-vmware.1 && sudo mv kubectl-linux-v1.19.3-vmware.1 /usr/local/bin/kubectl
+gunzip kubectl-linux-v1.20.4-vmware.1.gz
+chmod +x kubectl-linux-v1.20.4-vmware.1 && sudo mv kubectl-linux-v1.20.4-vmware.1 /usr/local/bin/kubectl
 
-gunzip tkg-linux-amd64-v1.2.1-vmware.1.tar.gz
-tar -xvf tkg-linux-amd64-v1.2.1-vmware.1.tar
-sudo mv tkg/tkg-linux-amd64-v1.2.1+vmware.1 /usr/local/bin/tkg
-sudo mv tkg/imgpkg-linux-amd64-v0.2.0+vmware.1 /usr/local/bin/imgpkg
-sudo mv tkg/kapp-linux-amd64-v0.33.0+vmware.1 /usr/local/bin/kapp
-sudo mv tkg/kbld-linux-amd64-v0.24.0+vmware.1 /usr/local/bin/kbld
-sudo mv tkg/ytt-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/ytt
-rm -rf tkg/
+tar -xvf tanzu-cli-bundle-linux-amd64.tar
+sudo install cli/core/v1.3.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+tanzu plugin clean
+tanzu plugin install --local cli all
+gunzip cli/imgpkg-linux-amd64-v0.2.0+vmware.1.gz
+sudo mv cli/imgpkg-linux-amd64-v0.2.0+vmware.1 /usr/local/bin/imgpkg
+gunzip cli/kapp-linux-amd64-v0.33.0+vmware.1.gz
+sudo mv cli/kapp-linux-amd64-v0.33.0+vmware.1 /usr/local/bin/kapp
+gunzip cli/kbld-linux-amd64-v0.24.0+vmware.1.gz
+sudo mv cli/kbld-linux-amd64-v0.24.0+vmware.1 /usr/local/bin/kbld
+gunzip cli/ytt-linux-amd64-v0.30.0+vmware.1.gz
+sudo mv cli/ytt-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/ytt
 
-gunzip velero-linux-v1.4.3_vmware.1.gz
-chmod +x velero-linux-v1.4.3_vmware.1
-sudo mv velero-linux-v1.4.3_vmware.1 /usr/local/bin/velero
-
+gunzip velero-linux-v1.5.3_vmware.1.gz
+chmod +x velero-linux-v1.5.3_vmware.1
+sudo mv velero-linux-v1.5.3_vmware.1 /usr/local/bin/velero
 ```
 
 Create a directory in your home for various git projects.  This is one of them.
@@ -89,16 +93,16 @@ Create a directory in your home for various git projects.  This is one of them.
 
 ```bash
 # Install pivnet - https://github.com/pivotal-cf/pivnet-cli
-curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.0/pivnet-linux-amd64-3.0.0
-chmod +x ./pivnet-linux-amd64-3.0.0
-sudo mv pivnet-linux-amd64-3.0.0 /usr/local/bin/pivnet
+curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-linux-amd64-3.0.1
+chmod +x ./pivnet-linux-amd64-3.0.1
+sudo mv pivnet-linux-amd64-3.0.1 /usr/local/bin/pivnet
 # Get your Pivnet API Token at the bottom of the [Pivnet Profile Page](https://network.pivotal.io/users/dashboard/edit-profile).  
 pivnet login --api-token $PIVNET_API_TOKEN
 
 # Install kp - https://docs.pivotal.io/build-service
 pivnet download-product-files \
   --product-slug='build-service' \
-  --release-version='1.1.1' \
+  --release-version='1.1.4' \
   --product-file-id=883031
 chmod +x kp-linux-0.2.0
 sudo mv kp-linux-0.2.0 /usr/local/bin/kp
@@ -110,7 +114,7 @@ sudo apt-get install jq
 sudo snap install k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq 
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.7.0/yq_linux_amd64 -O /usr/bin/yq 
 sudo chmod +x /usr/bin/yq
 
 # Install helm
@@ -132,14 +136,14 @@ sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-ded34d75/linux/x64/tmc
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-3baebdac/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
 # Install pack
-curl -LO https://github.com/buildpacks/pack/releases/download/v0.15.1/pack-v0.15.1-linux.tgz
-gunzip pack-v0.15.1-linux.tgz
-tar -xvf pack-v0.15.1-linux.tar
+curl -LO https://github.com/buildpacks/pack/releases/download/v0.18.1/pack-v0.18.1-linux.tgz
+gunzip pack-v0.18.1-linux.tgz
+tar -xvf pack-v0.18.1-linux.tar
 chmod +x pack
 sudo mv pack /usr/local/bin/
 rm pack*
@@ -164,7 +168,7 @@ sudo apt install openjdk-11-jdk
 - Download Server install image from https://releases.ubuntu.com/20.04/
 - Upload iso to data store
 - Create new VM
-  - name it linux-jumpbox, pace it in Datacenter
+  - name it linux-jumpbox, place it in Datacenter
   - put it on Cluster1
   - Guest OS: choose Linux - Ubuntu Linux x64
   - Customize Hardware:
