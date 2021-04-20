@@ -135,6 +135,9 @@ sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
 sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
+# Install fzf (for fuzy finder kubectx)
+sudo apt-get install fzf
+
 # Install tmc
 curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-3baebdac/linux/x64/tmc
 chmod +x ./tmc
