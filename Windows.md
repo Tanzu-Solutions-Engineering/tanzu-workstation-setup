@@ -15,17 +15,17 @@ Install VS Code - https://code.visualstudio.com/download
 - Add the Kubernetes extension from Microsoft
 
 Install Windows Subsystem for Linux 2 - https://docs.microsoft.com/en-us/windows/wsl/wsl2-kernel
+- Steps 1-5
 
 Install Docker - https://docs.docker.com/docker-for-windows/install/
 
 Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
-- tkg cli
+- tanzu cli
   - Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
 - kubectl cli
   - Extract using 7-zip and copy kubectl.exe to ~/bin
-  ova's
+- ova's
 - tkg extensions
-- tkg connectivity api
 
 Create single directory to put command line utilities into your path
 - Create %USERPROFILE%/bin directory
@@ -90,6 +90,12 @@ Install WinSCP - https://winscp.net/eng/download.php
 
 Install 7-zip - https://www.7-zip.org/
 
+Windows Terminal - Install from Microsoft Store
+- Search and then install
+- Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
+
+>Note: If you don't have (and can't add Microstoft Store Extension) this site can be used to obtain direct link to the software: https://store.rg-adguard.net/
+
 Install Python - Install from Microsoft Store
 - Search and then install
 - Note: Only seems to work in powershell
@@ -103,9 +109,6 @@ pip install --upgrade httpie
 ```
 - Output of the above will suggest that you add a directory to your PATH variable.  After you so, you will be able to use HTTPie from powershell and GitBash
 
-Windows Terminal - Install from Microsoft Store
-- Search and then install
-- Edit settings to add Git Bash as option: {"name": "Git Bash","commandline": "C:\\Program Files\\Git\\bin\\bash.exe","hidden": false}
 
 Install JDK - https://adoptopenjdk.net/releases.html
     JDK 11, Windows x86, msi
