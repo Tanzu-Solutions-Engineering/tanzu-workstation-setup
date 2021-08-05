@@ -138,7 +138,7 @@ cd k9s
 curl -L0 https://github.com/derailed/k9s/releases/download/v0.24.14/k9s_Linux_x86_64.tar.gz --output k9s_Linux_x86_64.tar.gz
 gunzip k9s_Linux_x86_64.tar.gz
 tar -xvf k9s_Linux_x86_64.tar
-sudo mv k9s /usr/local/bin/k9s::
+sudo mv k9s /usr/local/bin/k9s
 cd ..
 rm -rf k9s
 
@@ -149,7 +149,7 @@ sudo chmod +x /usr/bin/yq
 cd workspace
 git clone https://github.com/jonmosco/kube-ps1
 echo "source ~/workspace/kube-ps1/kube-ps1.sh" >> ~/.bashrc
-echo PS1=\'[\$\(date +\"%X %Y\"\) \\u@\\h \\W \$\(kube_ps1\)]\\$ \' >> ~/.bashrc
+echo PS1=\'[\$\(date +\"%X %Y\"\) \\u@\\h \\W\\n \$\(kube_ps1\)]\\$ \' >> ~/.bashrc
 
 source ~/.bashrc
 cd ~
