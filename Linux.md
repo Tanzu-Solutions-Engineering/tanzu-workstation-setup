@@ -41,6 +41,7 @@ Create a directory in your home for various git projects.  This is one of them.
 
 ```bash
 mkdir ~/workspace
+cd ~/workspace
 git clone https://github.com/doddatpivotal/tanzu-workstation-setup.git
 
 # create location for install packages
@@ -56,7 +57,6 @@ Using my workstation and then used scp to copy them to the linux jumpbox
 - kubectl cli
 - velero cli
 - crashd cli
-- tkg extensions
 
 From your mac workstation...
 
@@ -69,46 +69,49 @@ export JUMPBOX_IP=192.168.7.81 # update with your ip
 # - tkg-extensions
 # - velero
 # - crashd
-scp ~/Downloads/tkg-extensions-manifests-v1.3.1-vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/kubectl-linux-v1.20.5-vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/tanzu-cli-bundle-v1.3.1-linux-amd64.tar $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/velero-linux-v1.5.4_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/crashd-linux-amd64-v0.3.2-vmware.3.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
+scp ~/Downloads/kubectl-linux-v1.21.2+vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
+scp ~/Downloads/tanzu-cli-bundle-linux-amd64.tar $JUMPBOX_USER@$JUMPBOX_IP:downloads/
+scp ~/Downloads/velero-linux-v1.6.2_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
+scp ~/Downloads/crashd-linux-amd64-v0.3.3+vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
 ```
 
 From linux jumpbox...
 
 ```bash
-gunzip ~/downloads/kubectl-linux-v1.20.5-vmware.1.gz
-chmod +x ~/downloadskubectl-linux-v1.20.5-vmware.1 && sudo mv kubectl-linux-v1.20.5-vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.21.2+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.21.2-vmware.1 && sudo mv kubectl-linux-v1.21.2-vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
-tar -xvf ~/downloads/tanzu-cli-bundle-v1.3.1-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v1.3.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
+sudo install ~/tanzu-cli/cli/core/v1.4.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin clean
 tanzu plugin install --local ~/tanzu-cli/cli all
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.5.0+vmware.1.gz
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.5.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.36.0+vmware.1.gz
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.36.0+vmware.1 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.28.0+vmware.1.gz
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.28.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.31.0+vmware.1.gz
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/ytt
+gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1 
+sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1 /usr/local/bin/imgpkg
+gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/kapp
+gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/kbld
+gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/tt-linux-amd64-v0.34.0+vmware.1
+sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/ytt
 
-gunzip ~/downloads/velero-linux-v1.5.4_vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.5.4_vmware.1
-sudo cp ~/downloads/velero-linux-v1.5.4_vmware.1 /usr/local/bin/velero
+gunzip ~/downloads/velero-linux-v1.6.2_vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.6.2_vmware.1
+sudo cp ~/downloads/velero-linux-v1.6.2_vmware.1 /usr/local/bin/velero
 
-gunzip ~/downloads/crashd-linux-amd64-v0.3.2-vmware.3.tar.gz
+gunzip ~/downloads/crashd-linux-amd64-v0.3.3+vmware.1.tar.gz
 mkdir ~/tanzu-crashd
-tar -xvf ~/downloads/crashd-linux-amd64-v0.3.2-vmware.3.tar -C ~/tanzu-crashd
+tar -xvf ~/downloads/crashd-linux-amd64-v0.3.3+vmware.1.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.2+vmware.3 /usr/local/bin/crashd
+sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.3+vmware.1 /usr/local/bin/crashd
 
 ```
 
@@ -116,7 +119,7 @@ sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.2+vmware.3 /usr/local/bin/
 
 ```bash
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
@@ -143,7 +146,7 @@ cd ..
 rm -rf k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.7.0/yq_linux_amd64 -O /usr/bin/yq 
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.13.0/yq_linux_amd64 -O /usr/bin/yq 
 sudo chmod +x /usr/bin/yq
 
 cd workspace
