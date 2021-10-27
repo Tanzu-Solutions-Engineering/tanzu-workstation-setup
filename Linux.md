@@ -30,8 +30,7 @@ newgrp docker
 sudo reboot now
 # copy the config file from where snap puts it to where carvel tools expect it
 mkdir ~/.docker
-cp /home/ubuntu/snap/docker/*/.docker/config.json ~/.docker/config.json
-# if you find issue with kube proxy starting up, may need to run this command.  Found it just recently
+cp /var/snap/docker/current/config/daemon.json ~/.docker/config.json # if you find issue with kube proxy starting up, may need to run this command.  Found it just recently
 sudo sysctl net/netfilter/nf_conntrack_max=131072
 ```
 
@@ -50,36 +49,32 @@ mkdir ~/downloads
 
 ## Tanzu Kubernetes Grid Packages
 
-https://www.vmware.com/go/get-tkg
-
-Using my workstation and then used scp to copy them to the linux jumpbox
-- tanzu cli
-- kubectl cli
-- velero cli
-- crashd cli
-
-From your mac workstation...
-
-```bash
-export JUMPBOX_USER=dpfeffer # update with your user
-export JUMPBOX_IP=192.168.7.81 # update with your ip 
-# Download from https://www.vmware.com/go/get-tkg
-# - kubectl
-# - tanzu cli
-# - tkg-extensions
-# - velero
-# - crashd
-scp ~/Downloads/kubectl-linux-v1.21.2+vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/tanzu-cli-bundle-linux-amd64.tar $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/velero-linux-v1.6.2_vmware.1.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-scp ~/Downloads/crashd-linux-amd64-v0.3.3+vmware.1.tar.gz $JUMPBOX_USER@$JUMPBOX_IP:downloads/
-```
+All TKG cli's are avilable at https://www.vmware.com/go/get-tkg.  We will use the [vmw-cli OSS container](https://github.com/apnex/vmw-cli) to retrieve them.  You will need a VMware Customer Connect username and password.
 
 From linux jumpbox...
 
 ```bash
+export VMWARE_CUSTOMER_CONNECT_USER=<your username>
+export VMWARE_CUSTOMER_CONNECT_PASSWORD=<your password>
+
+cd ~/downloads
+
+docker run -itd --name vmw -e VMWUSER='$VMWARE_CUSTOMER_CONNECT_USER' -e VMWPASS='$VMWARE_CUSTOMER_CONNECT_PASSWORD' -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
+
+# view current files
+docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
+
+# download files
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.21.2+vmware.1.gz
+docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.3+vmware.1.tar.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.6.2_vmware.1.gz
+
+# stop vmw-cli container
+docker rm -f vmw
+
 gunzip ~/downloads/kubectl-linux-v1.21.2+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.21.2-vmware.1 && sudo mv kubectl-linux-v1.21.2-vmware.1 /usr/local/bin/kubectl
+chmod +x ~/downloads/kubectl-linux-v1.21.2+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.21.2+vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
@@ -100,7 +95,7 @@ gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1.gz
 chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1
 sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/kbld
 gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/tt-linux-amd64-v0.34.0+vmware.1
+chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1
 sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/ytt
 
 gunzip ~/downloads/velero-linux-v1.6.2_vmware.1.gz
@@ -133,6 +128,7 @@ sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 # Install fzf (for fuzy finder kubectx)
+sudo apt-get update
 sudo apt-get install fzf
 
 # Install k9s - https://github.com/derailed/k9s
@@ -149,7 +145,7 @@ rm -rf k9s
 sudo wget https://github.com/mikefarah/yq/releases/download/v4.13.0/yq_linux_amd64 -O /usr/bin/yq 
 sudo chmod +x /usr/bin/yq
 
-cd workspace
+cd ~/workspace
 git clone https://github.com/jonmosco/kube-ps1
 echo "source ~/workspace/kube-ps1/kube-ps1.sh" >> ~/.bashrc
 echo PS1=\'[\$\(date +\"%X %Y\"\) \\u@\\h \\W\\n \$\(kube_ps1\)]\\$ \' >> ~/.bashrc
