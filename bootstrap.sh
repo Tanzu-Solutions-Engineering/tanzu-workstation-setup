@@ -4,6 +4,8 @@
 export VMWUSER=$1
 export VMWPASS=$2
 
+mkdir -p /home/ubuntu/workspace
+
 echo ~~~~~~~~ SETUP ENV
 
 echo ~~~~~~~~ SYSTEM UPDATES
@@ -36,7 +38,6 @@ gunzip kubectl-linux-v1.21.2+vmware.1.gz
 chmod +x kubectl-linux-v1.21.2+vmware.1 && sudo mv kubectl-linux-v1.21.2+vmware.1 /usr/local/bin/kubectl
 
 mkdir -p /home/ubuntu/tanzu-cli
-chown -R ubuntu /home/ubuntu/tanzu-cli
 
 tar -xvf tanzu-cli-bundle-linux-amd64.tar -C /home/ubuntu/tanzu-cli
 sudo install /home/ubuntu/tanzu-cli/cli/core/v1.4.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
@@ -76,7 +77,6 @@ sudo mv ./kind /usr/local/bin/kind
 
 # Helpful Alias
 echo "alias k=kubectl" >> /home/ubuntu/.bashrc
-source /home/ubuntu/.bashrc
 
 # Install kubectx/kubens
 sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
