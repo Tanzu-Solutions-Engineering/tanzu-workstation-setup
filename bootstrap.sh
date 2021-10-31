@@ -1,5 +1,9 @@
-# expects $1 to be VMWUSER
-# expects $2 to be VMWPASS
+#!/bin/bash -e
+
+if [ ! $# -eq 2 ]; then
+  echo "Must supply customer connect username and password as args"
+  exit 1
+fi
 
 export VMWUSER=$1
 export VMWPASS=$2
