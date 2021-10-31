@@ -9,6 +9,7 @@ export VMWUSER=$1
 export VMWPASS=$2
 
 mkdir -p /home/ubuntu/workspace
+export HOME=/home/ubuntu
 
 echo ~~~~~~~~ SETUP ENV
 
