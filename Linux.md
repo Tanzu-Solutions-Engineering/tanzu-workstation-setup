@@ -59,7 +59,7 @@ export VMWARE_CUSTOMER_CONNECT_PASSWORD=<your password>
 
 cd ~/downloads
 
-docker run -itd --name vmw -e VMWUSER='$VMWARE_CUSTOMER_CONNECT_USER' -e VMWPASS='$VMWARE_CUSTOMER_CONNECT_PASSWORD' -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
+docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$VMWARE_CUSTOMER_CONNECT_PASSWORD -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
 
 # view current files
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
