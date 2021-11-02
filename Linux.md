@@ -86,7 +86,7 @@ echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
 gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1 
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1
 sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1 /usr/local/bin/imgpkg
 gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1.gz
 chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1
@@ -142,7 +142,7 @@ cd ..
 rm -rf k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.13.0/yq_linux_amd64 -O /usr/bin/yq 
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.13.0/yq_linux_amd64 -O /usr/bin/yq
 sudo chmod +x /usr/bin/yq
 
 cd ~/workspace
@@ -207,6 +207,12 @@ rm fly*
 
 # Install JDK
 sudo apt install openjdk-11-jdk
+
+# Install govc tool - https://github.com/vmware/govmomi/blob/master/govc/README.md#binaries
+curl -LO "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz"
+tar -xvzf govc_$(uname -s)_$(uname -m).tar.gz
+sudo mv govc /usr/local/bin
+rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
 ```
 
 ## Create Ubuntu Linux Virtual Machine (Optional)
