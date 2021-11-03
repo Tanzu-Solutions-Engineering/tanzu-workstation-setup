@@ -184,7 +184,7 @@ chmod +x kp-linux-0.2.0
 sudo mv kp-linux-0.2.0 /usr/local/bin/kp
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-170959eb/linux/x64/tmc
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.0-206eb180/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 

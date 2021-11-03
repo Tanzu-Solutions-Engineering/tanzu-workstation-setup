@@ -23,12 +23,10 @@ Install Windows Subsystem for Linux 2 - https://docs.microsoft.com/en-us/windows
 
 Install Docker - https://docs.docker.com/docker-for-windows/install/
 
-Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg
+(optional) Manually Download Tanzu Kubernetes Grid Packages - https://www.vmware.com/go/get-tkg (or you could download using cli as below)
 - tanzu cli
-  - Extract using 7-zip and copy tkg and Carvel utilities to ~/bin renaming them to name.exe
 - kubectl cli
-  - Extract using 7-zip and copy kubectl.exe to ~/bin
-- ova's
+- velero cli
 
 Create single directory to put command line utilities into your path
 - Create %USERPROFILE%\bin directory
@@ -47,6 +45,8 @@ The following should be executed using Git BASH...
 # Workaround for Docker for Windows in Git Bash. https://github.com/docker-archive/toolbox/issues/673
 echo docker() { (export MSYS_NO_PATHCONV=1; "docker.exe" "$@") } >> ~/.bash_profile
 
+export VMWUSER='<your-vmw-customer-connect-user>'
+export VMWPASS='<your-vmw-customer-connect-password>'
 
 # Download TKG files
 docker run -itd --name vmw -e VMWUSER=$VMWUSER -e VMWPASS=$VMWPASS -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
@@ -59,13 +59,14 @@ docker exec -t vmw vmw-cli cp velero-windows64-v1.6.2_vmware.1.gz
 # stop vmw-cli container
 docker rm -f vmw
 
-
+# unzip and move to your bin directory
 gunzip kubectl-windows-v1.21.2+vmware.1.exe.gz
 mv kubectl-windows-v1.21.2+vmware.1.exe ~/bin/kubectl.exe
 
+# install tanzu cli
 mkdir ~/tanzu-cli
 tar -xvf tanzu-cli-bundle-windows-amd64.tar -C ~/tanzu-cli
-
+rm tanzu-cli-bundle-windows-amd64.tar 
 
 cp ~/tanzu-cli/cli/core/v1.4.0/tanzu-core-windows_amd64.exe ~/bin/tanzu.exe
 tanzu plugin clean
@@ -81,61 +82,82 @@ tanzu plugin list
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.10.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.30.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/ytt
+# unzip and copy Carvel tools to your bin directory
+gunzip ~/tanzu-cli/cli/imgpkg-windows-amd64-v0.10.0+vmware.1.gz
+cp ~/tanzu-cli/cli/imgpkg-windows-amd64-v0.10.0+vmware.1 ~/bin/imgpkg.exe
+imgpkg version
+gunzip ~/tanzu-cli/cli/kapp-windows-amd64-v0.37.0+vmware.1.gz
+cp ~/tanzu-cli/cli/kapp-windows-amd64-v0.37.0+vmware.1 ~/bin/kapp.exe
+kapp version
+gunzip ~/tanzu-cli/cli/kbld-windows-amd64-v0.30.0+vmware.1.gz
+cp ~/tanzu-cli/cli/kbld-windows-amd64-v0.30.0+vmware.1 ~/bin/kbld.exe
+kbld version
+gunzip ~/tanzu-cli/cli/ytt-windows-amd64-v0.34.0+vmware.1.gz
+cp ~/tanzu-cli/cli/ytt-windows-amd64-v0.34.0+vmware.1 ~/bin/ytt.exe
+ytt version
 
-gunzip ~/downloads/velero-linux-v1.6.2_vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.6.2_vmware.1
-sudo cp ~/downloads/velero-linux-v1.6.2_vmware.1 /usr/local/bin/velero
+# unzip and copy velero cli to bin directory
+gunzip velero-windows64-v1.6.2_vmware.1.gz
+mv velero-windows64-v1.6.2_vmware.1 ~/bin/velero.exe
+velero version
 
+# download pivnet cli to bin directory
+curl -L -o ~/bin/pivnet.exe https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-windows-amd64-3.0.1
+pivnet -v
 
-curl -L -o ~/bin/pivnet.exe https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.0/pivnet-windows-amd64-3.0.0
-curl -L -o ~/bin/yq.exe https://github.com/mikefarah/yq/releases/download/4.6.1/yq_windows_amd64.exe
-curl -L -o ~/bin/tmc.exe https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-ded34d75/windows/x64/tmc.exe
+# download yqi to bin directory
+curl -L -o ~/bin/yq.exe https://github.com/mikefarah/yq/releases/download/v4.14.1/yq_windows_amd64.exe
+yq -V
+
+# download tmc cli to bin directory
+curl -L -o ~/bin/tmc.exe https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.0-206eb180/windows/x64/tmc.exe
+tmc version
+
+# download jq cli to bin directory
 curl -L -o ~/bin/jq.exe https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe
-curl -L -o ~/bin/kind.exe https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64
+jq --help
 
-curl -LO https://get.helm.sh/helm-v3.4.0-rc.1-windows-amd64.zip
-unzip helm-v3.4.0-rc.1-windows-amd64.zip 
+# download kind to bin directory
+curl -L -o ~/bin/kind.exe https://kind.sigs.k8s.io/dl/v0.11.1/kind-windows-amd64
+kind version
+
+# download helm to bin directory
+curl -LO https://get.helm.sh/helm-v3.7.1-windows-amd64.zip
+unzip helm-v3.7.1-windows-amd64.zip 
 mv windows-amd64/helm.exe ~/bin/helm.exe
 rm helm*
 rm -rf windows-amd64/
+helm version
 
-curl -LO https://github.com/vmware-tanzu/octant/releases/download/v0.16.1/octant_0.16.1_Windows-64bit.zip
-unzip octant_0.16.1_Windows-64bit.zip
-mv octant_0.16.1_Windows-64bit/octant.exe ~/bin/octant.exe
-rm -rf octant_0.16.1_Windows-64bit
+# download octant to bin directory
+curl -LO https://github.com/vmware-tanzu/octant/releases/download/v0.24.0/octant_0.24.0_Windows-64bit.zip
+unzip octant_0.24.0_Windows-64bit.zip
+mv octant_0.24.0_Windows-64bit/octant.exe ~/bin/octant.exe
+rm -rf octant_0.24.0_Windows-64bit
 rm octant*
+octant version
 
-curl -LO https://github.com/buildpacks/pack/releases/download/v0.15.1/pack-v0.15.1-windows.zip
-unzip pack-v0.15.1-windows.zip
+curl -LO https://github.com/buildpacks/pack/releases/download/v0.21.1/pack-v0.21.1-windows.zip
+unzip pack-v0.21.1-windows.zip
 mv pack.exe ~/bin/
 rm pack*
+pack version
 
-curl -LO https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_windows_amd64.exe.zip
-unzip govc_windows_amd64.exe.zip
-mv govc_windows_amd64.exe ~/bin/govc.exe
-rm govc_win*
+curl -LO https://github.com/vmware/govmomi/releases/download/v0.27.1/govc_Windows_x86_64.zip
+unzip govc_Windows_x86_64.zip 
+mv govc.exe ~/bin/govc.exe
+rm govc_win*  LICENSE.txt CHANGELOG.md 
+govc version
 
 curl -LO https://github.com/concourse/concourse/releases/download/v6.7.5/fly-6.7.5-windows-amd64.zip
 unzip fly-6.7.5-windows-amd64.zip
 mv fly.exe ~/bin/fly.exe
 rm fly-6.7.5*
 
-# Goto https://network.pivotal.io and register for an account if you have not done so already.  Then grab the legacy api token for your profile and use that to login with the command below
+# Goto https://network.tanzu.vmware.com and register for an account if you have not done so already.  Then grab the legacy api token for your profile and use that to login with the command below
 pivnet login
-pivnet download-product-files --product-slug='build-service' --release-version='1.1.1' --product-file-id=883033 --download-dir ~/bin
-mv ~/bin/kp-windows-0.2.0.exe ~/bin/kp.exe
+pivnet download-product-files --product-slug='build-service' --release-version='1.3.1' --product-file-id=1058207 --download-dir ~/bin
+mv ~/bin/kp-windows-0.4.0.exe ~/bin/kp.exe
 
 ```
 
