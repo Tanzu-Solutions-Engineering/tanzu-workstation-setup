@@ -128,7 +128,7 @@ sudo apt-get -y install jq
 sudo apt -y install httpie
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.2.1-170959eb/linux/x64/tmc
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.0-089ff971/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
