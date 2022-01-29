@@ -110,7 +110,7 @@ curl -L -o ~/bin/yq.exe https://github.com/mikefarah/yq/releases/download/v4.14.
 yq -V
 
 # download tmc cli to bin directory
-curl -L -o ~/bin/tmc.exe https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.0-206eb180/windows/x64/tmc.exe
+curl -L -o ~/bin/tmc.exe https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.1-478fcced/windows/x64/tmc.exe
 tmc version
 
 # download jq cli to bin directory
