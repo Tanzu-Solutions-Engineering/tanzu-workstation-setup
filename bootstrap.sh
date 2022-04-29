@@ -33,52 +33,52 @@ docker run -itd --name vmw -e VMWUSER=$VMWUSER -e VMWPASS=$VMWPASS -v ${PWD}:/fi
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.5+vmware.1.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.8+vmware.1.gz
+docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.7.0+vmware.1.gz
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip kubectl-linux-v1.22.5+vmware.1.gz
-chmod +x kubectl-linux-v1.22.5+vmware.1 && sudo mv kubectl-linux-v1.22.5+vmware.1 /usr/local/bin/kubectl
+gunzip kubectl-linux-v1.22.8+vmware.1.gz
+chmod +x kubectl-linux-v1.22.8+vmware.1 && sudo mv kubectl-linux-v1.22.8+vmware.1 /usr/local/bin/kubectl
 
 mkdir -p /home/ubuntu/tanzu-cli
 
 gunzip tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf tanzu-cli-bundle-linux-amd64.tar -C /home/ubuntu/tanzu-cli
-sudo install /home/ubuntu/tanzu-cli/cli/core/v0.11.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install /home/ubuntu/tanzu-cli/cli/core/v0.11.4/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> /home/ubuntu/.bashrc
 
-gunzip /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1 /usr/local/bin/imgpkg
-gunzip /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1 /usr/local/bin/kapp
+gunzip /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1 /usr/local/bin/imgpkg
+gunzip /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2
+sudo cp /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2 /usr/local/bin/kapp
 gunzip /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1.gz
 chmod +x /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1
 sudo cp /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/kbld
-gunzip /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1 /usr/local/bin/ytt
+gunzip /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
 
 gunzip /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1.gz
 chmod +x /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1
 sudo cp /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1 /usr/local/bin/velero
 
-gunzip /home/ubuntu/downloads/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar.gz
+gunzip /home/ubuntu/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 mkdir /home/ubuntu/tanzu-crashd
-tar -xvf /home/ubuntu/downloads/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar -C /home/ubuntu/tanzu-crashd
+tar -xvf /home/ubuntu/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar -C /home/ubuntu/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp /home/ubuntu/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12 /usr/local/bin/crashd
+sudo cp /home/ubuntu/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5.tar /usr/local/bin/crashd
 
 tanzu plugin list
 
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
