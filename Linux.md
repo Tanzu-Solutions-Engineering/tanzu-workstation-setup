@@ -66,48 +66,48 @@ docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.5+vmware.1.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.8+vmware.1.gz
+docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.7.0+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.22.5+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.22.5+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.5+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.22.8+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.22.8+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.8+vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.11.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.11.4/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.18.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.1 /usr/local/bin/kapp
+gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1
+sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1 /usr/local/bin/imgpkg
+gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2.gz
+chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2
+sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2 /usr/local/bin/kapp
 gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1.gz
 chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1
 sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.35.1+vmware.1 /usr/local/bin/ytt
+gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
+sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
 
 gunzip ~/downloads/velero-linux-v1.7.0+vmware.1.gz
 chmod +x ~/downloads/velero-linux-v1.7.0+vmware.1
 sudo cp ~/downloads/velero-linux-v1.7.0+vmware.1 /usr/local/bin/velero
 
-gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar.gz
+gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 mkdir ~/tanzu-crashd
-tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12.tar -C ~/tanzu-crashd
+tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12 /usr/local/bin/crashd
+sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5 /usr/local/bin/crashd
 
 ```
 
@@ -115,7 +115,7 @@ sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.3-1-g3c97e12 /usr
 
 ```bash
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
