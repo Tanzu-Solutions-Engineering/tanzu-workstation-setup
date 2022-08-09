@@ -54,21 +54,21 @@ docker run -itd --name vmw -e VMWUSER=$VMWUSER -e VMWPASS=$VMWPASS -v ${PWD}:/fi
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-windows-amd64.zip
-docker exec -t vmw vmw-cli cp kubectl-windows-v1.22.8+vmware.1.exe.gz
-docker exec -t vmw vmw-cli cp velero-windows64-v1.7.0+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-windows-v1.22.9+vmware.1.exe.gz
+docker exec -t vmw vmw-cli cp velero-windows64-v1.8.1+vmware.1.gz
 # stop vmw-cli container
 docker rm -f vmw
 
 # unzip and move to your bin directory
-gunzip kubectl-windows-v1.22.8+vmware.1.exe.gz
-mv kubectl-windows-v1.22.8+vmware.1.exe ~/bin/kubectl.exe
+gunzip kubectl-windows-v1.22.9+vmware.1.exe.gz
+mv kubectl-windows-v1.22.9+vmware.1.exe ~/bin/kubectl.exe
 
 # install tanzu cli
 mkdir ~/tanzu-cli
 unzip tanzu-cli-bundle-windows-amd64.zip -d ~/tanzu-cli
 rm tanzu-cli-bundle-windows-amd64.zip
 
-cp ~/tanzu-cli/cli/core/v0.11.4/tanzu-core-windows_amd64.exe ~/bin/tanzu.exe
+cp ~/tanzu-cli/cli/core/v0.11.6/tanzu-core-windows_amd64.exe ~/bin/tanzu.exe
 tanzu plugin sync
 
 # Above will likely fail.  So Due to [Running Tanzu commands on Windows fails with a certificate error] (https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.3.1/rn/VMware-Tanzu-Kubernetes-Grid-131-Release-Notes.html#knownissues)
@@ -100,8 +100,8 @@ cp ~/tanzu-cli/cli/ytt-windows-amd64-v0.37.0+vmware.1 ~/bin/ytt.exe
 ytt version
 
 # unzip and copy velero cli to bin directory
-gunzip velero-windows64-v1.7.0+vmware.1.gz
-mv velero-windows64-v1.7.0+vmware.1 ~/bin/velero.exe
+gunzip velero-windows64-v1.8.1+vmware.1.gz
+mv velero-windows64-v1.8.1+vmware.1 ~/bin/velero.exe
 velero version
 
 # download pivnet cli to bin directory

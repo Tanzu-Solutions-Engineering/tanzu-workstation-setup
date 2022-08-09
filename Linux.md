@@ -4,7 +4,10 @@ The following cheatsheet supports applications and utilities helpful for develop
 
 The apps listed collected and used form a completely fresh Ubuntu Linux jumpbox.  See notes on creating the Ubuntu Linux VM at the bottom.
 
-Recommended size is cpu 2, ram 6GB, disk 30GB​.
+Recommended size is cpu 2, ram 6GB, disk 30GB​. Or cpu 4, ram 8GB disk 160GB if you're installing Harbor
+
+The following steps expects internet connectivity for ths jumpbox, either directly or via proxy settings.
+
 
 ## VMware Tanzu Accounts
 
@@ -65,22 +68,22 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.8+vmware.1.gz
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.9+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.7.0+vmware.1.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.22.8+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.22.8+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.8+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.22.9+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.22.9+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.9+vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.11.4/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.11.6/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
@@ -99,16 +102,15 @@ gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
 chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
 sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
 
-gunzip ~/downloads/velero-linux-v1.7.0+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.7.0+vmware.1
-sudo cp ~/downloads/velero-linux-v1.7.0+vmware.1 /usr/local/bin/velero
+gunzip ~/downloads/velero-linux-v1.8.1+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.8.1+vmware.1
+sudo cp ~/downloads/velero-linux-v1.8.1+vmware.1 /usr/local/bin/velero
 
 gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 mkdir ~/tanzu-crashd
 tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
 sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5 /usr/local/bin/crashd
-
 ```
 
 ## Additional Apps & Utilities
