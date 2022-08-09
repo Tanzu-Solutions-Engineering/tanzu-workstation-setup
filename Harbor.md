@@ -44,8 +44,9 @@ openssl x509 -req -sha512 -days 3650 -extfile v3.ext -CA ca.crt -CAkey ca.key -C
 # Convert crt to cert, for use by Docker
 openssl x509 -inform PEM -in harbor.h2o-4-1056.h2o.vmware.com.crt -out harbor.h2o-4-1056.h2o.vmware.com.cert
 # Copy the server certificate, key and CA files into the Docker certificates folder on the Harbor host. You must create the appropriate folders first
-mkdir -p /var/snap/docker/certs.d/harbor.h2o-4-1056.h2o.vmware.com/
-sudo cp * /var/snap/docker/certs.d/harbor.h2o-4-1056.h2o.vmware.com/
+sudo mkdir -p /var/snap/docker/current/etc/docker/certs.d/harbor.h2o-4-1056.h2o.vmware.com/
+sudo cp harbor.h2o-4-1056.h2o.vmware.com.* /var/snap/docker/current/etc/docker/certs.d/harbor.h2o-4-1056.h2o.vmware.com/
+sudo cp ca.crt /var/snap/docker/current/etc/docker/certs.d/harbor.h2o-4-1056.h2o.vmware.com/
 # Restart Docker Server
 sudo snap restart docker
 ```
