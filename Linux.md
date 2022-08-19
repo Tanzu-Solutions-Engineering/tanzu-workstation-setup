@@ -18,22 +18,31 @@ The following steps expects internet connectivity for ths jumpbox, either direct
 
 Git - Installed out of the box
 
-Docker - Installed through initial VM setup via Snap
+Docker - Follow [these instructions](https://docs.docker.com/engine/install/ubuntu/) to setup Docker in your VM. See script below.
 
-- If not done at setup, you can run `sudo snap install docker --classic`.  See script below.
 - I faced an permission issue with docker and needed to follow [these steps](https://docs.docker.com/engine/install/linux-postinstall/).
 - Note: If running with HTTP_PROXY follow these [additional instructions](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy).
-- Note: For some reason the snap version puts the config.json for docker in an unusual location.  The carvel tools need this file to be at ~/.docker/config.json or else it won't be able to read the auth information that stored there.  Once you do logins or modify this file, copy it to the expected location.  Each time you do an action that would edit the config, you need to re-copy.
+- Note: The carvel tools need the `config.json` to be at `~/.docker/config.json` or else it won't be able to read the auth information that stored there.
 
 ```bash
-sudo snap install docker --classic
+# Cleanup
+sudo apt-get remove docker docker-engine docker.io containerd runc
+# Install Packages
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
+# Post install permissions
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
-# copy the config file from where snap puts it to where carvel tools expect it
+# copy the config file to where carvel tools expect it
 mkdir ~/.docker
-cp /var/snap/docker/current/config/daemon.json ~/.docker/config.json # if you find issue with kube proxy starting up, may need to run this command.  Found it just recently
+# cp /var/snap/docker/current/config/daemon.json ~/.docker/config.json # if you find issue with kube proxy starting up, may need to run this command.  Found it just recently - UPDATE only seemed needed in the snap versions of docker
 sudo sysctl net/netfilter/nf_conntrack_max=131072
 ```
 
@@ -235,5 +244,5 @@ rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
   - Accept all defaults
   - Your name, linux-jumpbox, your username, your password
   - Install SSH server, but don't import keys
-  - SNAPS: Docker
+  - Leave Unchecked the `SNAPS: Docker` option
 - Now Get the IP address and ssh into it.  I did `ssh dpfeffer@192.168.7.77`
