@@ -190,7 +190,7 @@ sudo apt install httpie
 # Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
    --product-slug='build-service' \
-   --release-version='1.6.1' 
+   --release-version='1.6.1' \
    --product-file-id=1241251
 chmod +x kp-linux-0.6.0
 sudo mv kp-linux-0.6.0 /usr/local/bin/kp
