@@ -53,7 +53,7 @@ Create a directory in your home for various git projects.  This is one of them.
 ```bash
 mkdir ~/workspace
 cd ~/workspace
-git clone https://github.com/doddatpivotal/tanzu-workstation-setup.git
+git clone https://github.com/Tanzu-Solutions-Engineering/tanzu-workstation-setup
 
 # create location for install packages
 mkdir ~/downloads
@@ -77,39 +77,39 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.9+vmware.1.gz
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.23.8+vmware.2.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.22.9+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.22.9+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.9+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.23.8+vmware.2.gz
+chmod +x ~/downloads/kubectl-linux-v1.23.8+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.23.8+vmware.2 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.11.6/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
+gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1
+sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1 /usr/local/bin/imgpkg
+gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1 /usr/local/bin/kapp
+gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/kbld
+gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1
+sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1 /usr/local/bin/ytt
 
 gunzip ~/downloads/velero-linux-v1.8.1+vmware.1.gz
 chmod +x ~/downloads/velero-linux-v1.8.1+vmware.1
@@ -187,16 +187,16 @@ sudo apt-get install jq
 # Install HTTPie
 sudo apt install httpie
 
-# Install kp - https://docs.pivotal.io/build-service
+# Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
-  --product-slug='build-service' \
-  --release-version='1.4.2' \
-  --product-file-id=1082452
-chmod +x kp-linux-0.4.2
-sudo mv kp-linux-0.4.2 /usr/local/bin/kp
+   --product-slug='build-service' \
+   --release-version='1.6.1' 
+   --product-file-id=1241251
+chmod +x kp-linux-0.6.0
+sudo mv kp-linux-0.6.0 /usr/local/bin/kp
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.3-898aa74f/linux/x64/tmc 
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.1-7eec047c/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
