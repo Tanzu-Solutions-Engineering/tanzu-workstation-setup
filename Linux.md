@@ -18,22 +18,31 @@ The following steps expects internet connectivity for ths jumpbox, either direct
 
 Git - Installed out of the box
 
-Docker - Installed through initial VM setup via Snap
+Docker - Follow [these instructions](https://docs.docker.com/engine/install/ubuntu/) to setup Docker in your VM. See script below.
 
-- If not done at setup, you can run `sudo snap install docker --classic`.  See script below.
 - I faced an permission issue with docker and needed to follow [these steps](https://docs.docker.com/engine/install/linux-postinstall/).
 - Note: If running with HTTP_PROXY follow these [additional instructions](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy).
-- Note: For some reason the snap version puts the config.json for docker in an unusual location.  The carvel tools need this file to be at ~/.docker/config.json or else it won't be able to read the auth information that stored there.  Once you do logins or modify this file, copy it to the expected location.  Each time you do an action that would edit the config, you need to re-copy.
+- Note: The carvel tools need the `config.json` to be at `~/.docker/config.json` or else it won't be able to read the auth information that stored there.
 
 ```bash
-sudo snap install docker --classic
+# Cleanup
+sudo apt-get remove docker docker-engine docker.io containerd runc
+# Install Packages
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
+# Post install permissions
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
-# copy the config file from where snap puts it to where carvel tools expect it
+# copy the config file to where carvel tools expect it
 mkdir ~/.docker
-cp /var/snap/docker/current/config/daemon.json ~/.docker/config.json # if you find issue with kube proxy starting up, may need to run this command.  Found it just recently
+# cp /var/snap/docker/current/config/daemon.json ~/.docker/config.json # if you find issue with kube proxy starting up, may need to run this command.  Found it just recently - UPDATE only seemed needed in the snap versions of docker
 sudo sysctl net/netfilter/nf_conntrack_max=131072
 ```
 
@@ -44,7 +53,7 @@ Create a directory in your home for various git projects.  This is one of them.
 ```bash
 mkdir ~/workspace
 cd ~/workspace
-git clone https://github.com/doddatpivotal/tanzu-workstation-setup.git
+git clone https://github.com/Tanzu-Solutions-Engineering/tanzu-workstation-setup
 
 # create location for install packages
 mkdir ~/downloads
@@ -68,39 +77,39 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.9+vmware.1.gz
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.23.8+vmware.2.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.22.9+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.22.9+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.22.9+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.23.8+vmware.2.gz
+chmod +x ~/downloads/kubectl-linux-v1.23.8+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.23.8+vmware.2 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.11.6/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
+gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1
+sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1 /usr/local/bin/imgpkg
+gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1 /usr/local/bin/kapp
+gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1
+sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/kbld
+gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1
+sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1 /usr/local/bin/ytt
 
 gunzip ~/downloads/velero-linux-v1.8.1+vmware.1.gz
 chmod +x ~/downloads/velero-linux-v1.8.1+vmware.1
@@ -178,16 +187,16 @@ sudo apt-get install jq
 # Install HTTPie
 sudo apt install httpie
 
-# Install kp - https://docs.pivotal.io/build-service
+# Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
-  --product-slug='build-service' \
-  --release-version='1.4.2' \
-  --product-file-id=1082452
-chmod +x kp-linux-0.4.2
-sudo mv kp-linux-0.4.2 /usr/local/bin/kp
+   --product-slug='build-service' \
+   --release-version='1.6.1' 
+   --product-file-id=1241251
+chmod +x kp-linux-0.6.0
+sudo mv kp-linux-0.6.0 /usr/local/bin/kp
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.3-898aa74f/linux/x64/tmc 
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.1-7eec047c/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
@@ -235,5 +244,5 @@ rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
   - Accept all defaults
   - Your name, linux-jumpbox, your username, your password
   - Install SSH server, but don't import keys
-  - SNAPS: Docker
+  - Leave Unchecked the `SNAPS: Docker` option
 - Now Get the IP address and ssh into it.  I did `ssh dpfeffer@192.168.7.77`

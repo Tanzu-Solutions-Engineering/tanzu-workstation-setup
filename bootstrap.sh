@@ -14,14 +14,15 @@ export HOME=/home/ubuntu
 echo ~~~~~~~~ SETUP ENV
 
 echo ~~~~~~~~ SYSTEM UPDATES
-apt update
-apt upgrade
+sudo apt-get update
+sudo apt-get upgrade
 echo ~~~~~~~~ INSTALL SYSTEM COMPONENTS
-apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-apt-cache policy docker-ce
-apt install -y docker-ce
+sudo apt-get install ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 
 usermod -aG docker ubuntu
 
@@ -33,41 +34,41 @@ docker run -itd --name vmw -e VMWUSER=$VMWUSER -e VMWPASS=$VMWPASS -v ${PWD}:/fi
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.22.8+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.23.8+vmware.2.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.7.0+vmware.1.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip kubectl-linux-v1.22.8+vmware.1.gz
-chmod +x kubectl-linux-v1.22.8+vmware.1 && sudo mv kubectl-linux-v1.22.8+vmware.1 /usr/local/bin/kubectl
+gunzip kubectl-linux-v1.23.8+vmware.2.gz
+chmod +x kubectl-linux-v1.23.8+vmware.2 && sudo mv kubectl-linux-v1.23.8+vmware.2 /usr/local/bin/kubectl
 
 mkdir -p /home/ubuntu/tanzu-cli
 
 gunzip tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf tanzu-cli-bundle-linux-amd64.tar -C /home/ubuntu/tanzu-cli
-sudo install /home/ubuntu/tanzu-cli/cli/core/v0.11.4/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install /home/ubuntu/tanzu-cli/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> /home/ubuntu/.bashrc
 
-gunzip /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.22.0+vmware.1 /usr/local/bin/imgpkg
-gunzip /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2
-sudo cp /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.42.0+vmware.2 /usr/local/bin/kapp
-gunzip /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.31.0+vmware.1 /usr/local/bin/kbld
-gunzip /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1.gz
-chmod +x /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1
-sudo cp /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.37.0+vmware.1 /usr/local/bin/ytt
+gunzip /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1 /usr/local/bin/imgpkg
+gunzip /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1 /usr/local/bin/kapp
+gunzip /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/kbld
+gunzip /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1.gz
+chmod +x /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1
+sudo cp /home/ubuntu/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1 /usr/local/bin/ytt
 
-gunzip /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1.gz
-chmod +x /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1
-sudo cp /home/ubuntu/downloads/velero-linux-v1.7.0+vmware.1 /usr/local/bin/velero
+gunzip /home/ubuntu/downloads/velero-linux-v1.8.1+vmware.1.gz
+chmod +x /home/ubuntu/downloads/velero-linux-v1.8.1+vmware.1
+sudo cp /home/ubuntu/downloads/velero-linux-v1.8.1+vmware.1 /usr/local/bin/velero
 
 gunzip /home/ubuntu/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
 mkdir /home/ubuntu/tanzu-crashd
@@ -129,8 +130,8 @@ sudo apt-get -y install jq
 # Install HTTPie
 sudo apt -y install httpie
 
-# Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.3-898aa74f/linux/x64/tmc 
+# Install tmc 
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.1-7eec047c/linux/x64/tmc
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
