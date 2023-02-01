@@ -77,56 +77,59 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.23.8+vmware.2.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.9+vmware.1.gz
+docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.9.5+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.23.8+vmware.2.gz
-chmod +x ~/downloads/kubectl-linux-v1.23.8+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.23.8+vmware.2 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.24.9+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.24.9+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.24.9+vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.28.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1 /usr/local/bin/ytt
+gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1
+sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1 /usr/local/bin/imgpkg
 
-gunzip ~/downloads/velero-linux-v1.8.1+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.8.1+vmware.1
-sudo cp ~/downloads/velero-linux-v1.8.1+vmware.1 /usr/local/bin/velero
+gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1
+sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1 /usr/local/bin/kapp
 
-gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
+gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1
+sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1 /usr/local/bin/kbld
+
+gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1.gz
+chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1
+sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1 /usr/local/bin/ytt
+
+gunzip ~/downloads/velero-linux-v1.9.5+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.9.5+vmware.1
+sudo cp ~/downloads/velero-linux-v1.9.5+vmware.1 /usr/local/bin/velero
+
+gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 mkdir ~/tanzu-crashd
-tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar -C ~/tanzu-crashd
+tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5 /usr/local/bin/crashd
+sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d /usr/local/bin/crashd
 ```
 
 ## Additional Apps & Utilities
 
 ```bash
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
@@ -146,15 +149,15 @@ sudo apt-get install fzf
 # Install k9s - https://github.com/derailed/k9s
 mkdir k9s
 cd k9s
-curl -L0 https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Linux_x86_64.tar.gz --output k9s_Linux_x86_64.tar.gz
-gunzip k9s_Linux_x86_64.tar.gz
-tar -xvf k9s_Linux_x86_64.tar
+curl -L0 https://github.com/derailed/k9s/releases/download/v0.27.2/k9s_Linux_amd64.tar.gz --output k9s_Linux_amd64.tar.gz
+gunzip k9s_Linux_amd64.tar
+tar -xvf k9s_Linux_amd64.tar
 sudo mv k9s /usr/local/bin/k9s
 cd ..
 rm -rf k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.21.1/yq_linux_amd64 -O /usr/bin/yq
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_amd64 -O /usr/bin/yq
 sudo chmod +x /usr/bin/yq
 
 cd ~/workspace
@@ -166,9 +169,9 @@ source ~/.bashrc
 cd ~
 
 # Install helm
-curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
-gunzip helm-v3.8.0-linux-amd64.tar.gz
-tar -xvf helm-v3.8.0-linux-amd64.tar
+curl -LO https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
+gunzip helm-v3.11.0-linux-amd64.tar.gz
+tar -xvf helm-v3.11.0-linux-amd64.tar
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm helm*
 rm -rf linux-amd64/
@@ -189,19 +192,19 @@ sudo apt install httpie
 
 # Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
-   --product-slug='build-service' \
-   --release-version='1.6.1' \
-   --product-file-id=1241251
-chmod +x kp-linux-0.6.0
-sudo mv kp-linux-0.6.0 /usr/local/bin/kp
+  --product-slug='build-service' \
+  --release-version='1.9.1' \
+  --product-file-id=1416327
+chmod +x kp-linux-amd64-0.9.1
+sudo mv kp-linux-amd64-0.9.1 /usr/local/bin/kp
 
 # Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.1-7eec047c/linux/x64/tmc
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.3-bdf68514/linux/x64/tmc 
 chmod +x ./tmc
 sudo mv tmc /usr/local/bin/tmc
 
 # Install pack
-PACK_VERSION=v0.24.0
+PACK_VERSION=v0.28.0
 curl -LO https://github.com/buildpacks/pack/releases/download/$PACK_VERSION/pack-$PACK_VERSION-linux.tgz
 gunzip pack-$PACK_VERSION-linux.tgz
 tar -xvf pack-$PACK_VERSION-linux.tar
@@ -209,16 +212,8 @@ chmod +x pack
 sudo mv pack /usr/local/bin/
 rm pack*
 
-# Install fly
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.5/fly-6.7.5-linux-amd64.tgz
-gunzip fly-6.7.5-linux-amd64.tgz
-tar -xvf fly-6.7.5-linux-amd64.tar
-chmod +x fly
-sudo mv fly /usr/local/bin/
-rm fly*
-
 # Install JDK
-sudo apt install openjdk-11-jdk
+sudo apt install openjdk-17-jdk
 
 # Install govc tool - https://github.com/vmware/govmomi/blob/master/govc/README.md#binaries
 curl -LO "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz"
@@ -236,7 +231,7 @@ rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
   - put it on Cluster1
   - Guest OS: choose Linux - Ubuntu Linux x64
   - Customize Hardware:
-    - cpu 2, ram 6GB, disk 30GB
+    - cpu 2, ram 6GB, disk 50GB
     - VM Network
     - Add a second CD Drive and choose ISO
 - Power on jumpbox
