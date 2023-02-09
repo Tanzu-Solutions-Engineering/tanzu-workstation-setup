@@ -77,7 +77,7 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar
+docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
 docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.9+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.9.5+vmware.1.gz
