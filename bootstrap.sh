@@ -34,20 +34,20 @@ docker run -itd --name vmw -e VMWUSER=$VMWUSER -e VMWPASS=$VMWPASS -v ${PWD}:/fi
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.9+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.10+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.9.5+vmware.1.gz
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip kubectl-linux-v1.24.9+vmware.1.gz
-chmod +x kubectl-linux-v1.24.9+vmware.1 && sudo mv kubectl-linux-v1.24.9+vmware.1 /usr/local/bin/kubectl
+gunzip kubectl-linux-v1.24.10+vmware.1.gz
+chmod +x kubectl-linux-v1.24.10+vmware.1 && sudo mv kubectl-linux-v1.24.10+vmware.1 /usr/local/bin/kubectl
 
 mkdir -p /home/ubuntu/tanzu-cli
 
 gunzip tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf tanzu-cli-bundle-linux-amd64.tar -C /home/ubuntu/tanzu-cli
-sudo install /home/ubuntu/tanzu-cli/cli/core/v0.28.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install /home/ubuntu/tanzu-cli/cli/core/v0.28.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 

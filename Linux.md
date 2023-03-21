@@ -78,21 +78,21 @@ docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
 docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.9+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.10+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.9.5+vmware.1.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.24.9+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.24.9+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.24.9+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.24.10+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.24.10+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.24.10+vmware.1 /usr/local/bin/kubectl
 
 mkdir ~/tanzu-cli
 
 gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
 tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.28.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+sudo install ~/tanzu-cli/cli/core/v0.28.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin sync
 
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
