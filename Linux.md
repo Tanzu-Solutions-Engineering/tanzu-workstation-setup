@@ -36,7 +36,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 # Post install permissions
-sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
@@ -59,7 +58,26 @@ git clone https://github.com/Tanzu-Solutions-Engineering/tanzu-workstation-setup
 mkdir ~/downloads
 ```
 
-## Tanzu Kubernetes Grid Packages
+## Install Tanzu CLI and its plugins
+
+Install independent CLI v0.90.1 with apt-get
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gpg
+curl -fsSL https://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub | sudo gpg --dearmor -o /etc/apt/keyrings/tanzu-archive-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/tanzu-archive-keyring.gpg] https://storage.googleapis.com/tanzu-cli-os-packages/apt tanzu-cli-jessie main" | sudo tee /etc/apt/sources.list.d/tanzu.list
+sudo apt-get update
+sudo apt-get install tanzu-cli=0.90.1
+echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
+source ~/.bashrc
+```
+
+Install plugins
+```bash
+tanzu plugin install --group vmware-tkg/default:v2.3.0 # Agree to terms inn the prompt
+```
+
+## Install Additional Tanzu Kubernetes Grid Tools
 
 All TKG cli's are avilable at https://www.vmware.com/go/get-tkg.  We will use the [vmw-cli OSS container](https://github.com/apnex/vmw-cli) to retrieve them.  You will need a VMware Customer Connect username and password.
 
@@ -77,46 +95,40 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.24.10+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.26.5+vmware.2.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.9.5+vmware.1.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.10.3+vmware.1.gz
+docker exec -t vmw vmw-cli cp tkg-carvel-tools-linux-amd64.tar.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.24.10+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.24.10+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.24.10+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.26.5+vmware.2.gz
+chmod +x ~/downloads/kubectl-linux-v1.26.5+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.26.5+vmware.2 /usr/local/bin/kubectl
 
-mkdir ~/tanzu-cli
+gunzip ~/downloads/tkg-carvel-tools-linux-amd64.tar.gz
+mkdir ~/downloads/tkg-carvel
+tar -xvf ~/downloads/tkg-carvel-tools-linux-amd64.tar -C ~/downloads/tkg-carvel
 
-gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
-tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.28.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
-tanzu plugin sync
+gunzip ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2 /usr/local/bin/imgpkg
 
-echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
-source ~/.bashrc
+gunzip ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2 /usr/local/bin/kapp
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.31.1+vmware.1 /usr/local/bin/imgpkg
+gunzip ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2 /usr/local/bin/kbld
 
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.53.2+vmware.1 /usr/local/bin/kapp
+gunzip ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2 /usr/local/bin/ytt
 
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.35.1+vmware.1 /usr/local/bin/kbld
-
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.43.1+vmware.1 /usr/local/bin/ytt
-
-gunzip ~/downloads/velero-linux-v1.9.5+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.9.5+vmware.1
-sudo cp ~/downloads/velero-linux-v1.9.5+vmware.1 /usr/local/bin/velero
+gunzip ~/downloads/velero-linux-v1.10.3+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.10.3+vmware.1
+sudo cp ~/downloads/velero-linux-v1.10.3+vmware.1 /usr/local/bin/velero
 
 gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 mkdir ~/tanzu-crashd
@@ -137,14 +149,27 @@ sudo mv ./kind /usr/local/bin/kind
 echo "alias k=kubectl" >> ~/.bashrc
 source ~/.bashrc
 
+# Install krew
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
 # Install kubectx/kubens
 sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
 sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 # Install fzf (for fuzy finder kubectx)
-sudo apt-get update
-sudo apt-get install fzf
+kubectl krew update
+kubectl krew install fuzzy
 
 # Install k9s - https://github.com/derailed/k9s
 mkdir k9s
@@ -198,11 +223,6 @@ pivnet download-product-files \
 chmod +x kp-linux-amd64-0.9.1
 sudo mv kp-linux-amd64-0.9.1 /usr/local/bin/kp
 
-# Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.3-bdf68514/linux/x64/tmc 
-chmod +x ./tmc
-sudo mv tmc /usr/local/bin/tmc
-
 # Install pack
 PACK_VERSION=v0.28.0
 curl -LO https://github.com/buildpacks/pack/releases/download/$PACK_VERSION/pack-$PACK_VERSION-linux.tgz
@@ -231,7 +251,7 @@ rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
   - put it on Cluster1
   - Guest OS: choose Linux - Ubuntu Linux x64
   - Customize Hardware:
-    - cpu 2, ram 6GB, disk 50GB
+    - cpu 2, ram 6GB, disk 100GB
     - VM Network
     - Add a second CD Drive and choose ISO
 - Power on jumpbox
