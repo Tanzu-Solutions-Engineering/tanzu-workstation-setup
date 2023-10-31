@@ -74,7 +74,7 @@ source ~/.bashrc
 
 Install plugins
 ```bash
-tanzu plugin group get vmware-tkg/default:v2.4.0 # Agree to terms in the prompt
+tanzu plugin install --group vmware-tkg/default:v2.4.0 # Agree to terms in the prompt
 ```
 
 ## Install Additional Tanzu Kubernetes Grid Tools
