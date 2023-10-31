@@ -60,21 +60,21 @@ mkdir ~/downloads
 
 ## Install Tanzu CLI and its plugins
 
-Install independent CLI v0.90.1 with apt-get
+Install independent CLI v1.0.0 with apt-get
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gpg
 curl -fsSL https://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub | sudo gpg --dearmor -o /etc/apt/keyrings/tanzu-archive-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/tanzu-archive-keyring.gpg] https://storage.googleapis.com/tanzu-cli-os-packages/apt tanzu-cli-jessie main" | sudo tee /etc/apt/sources.list.d/tanzu.list
 sudo apt-get update
-sudo apt-get install tanzu-cli=0.90.1
+sudo apt-get install tanzu-cli
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 ```
 
 Install plugins
 ```bash
-tanzu plugin install --group vmware-tkg/default:v2.3.0 # Agree to terms inn the prompt
+tanzu plugin group get vmware-tkg/default:v2.4.0 # Agree to terms in the prompt
 ```
 
 ## Install Additional Tanzu Kubernetes Grid Tools
@@ -95,16 +95,16 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download files
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.26.5+vmware.2.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.27.5+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.10.3+vmware.1.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.11.1+vmware.1.gz
 docker exec -t vmw vmw-cli cp tkg-carvel-tools-linux-amd64.tar.gz
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.26.5+vmware.2.gz
-chmod +x ~/downloads/kubectl-linux-v1.26.5+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.26.5+vmware.2 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.27.5+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.27.5+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.27.5+vmware.1 /usr/local/bin/kubectl
 
 gunzip ~/downloads/tkg-carvel-tools-linux-amd64.tar.gz
 mkdir ~/downloads/tkg-carvel
@@ -126,9 +126,9 @@ gunzip ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2.gz
 chmod +x ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2
 sudo cp ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2 /usr/local/bin/ytt
 
-gunzip ~/downloads/velero-linux-v1.10.3+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.10.3+vmware.1
-sudo cp ~/downloads/velero-linux-v1.10.3+vmware.1 /usr/local/bin/velero
+gunzip ~/downloads/velero-linux-v1.11.1+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.11.1+vmware.1
+sudo cp ~/downloads/velero-linux-v1.11.1+vmware.1 /usr/local/bin/velero
 
 gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
 mkdir ~/tanzu-crashd
