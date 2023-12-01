@@ -60,7 +60,7 @@ mkdir ~/downloads
 
 ## Install Tanzu CLI and its plugins
 
-Install independent CLI v1.0.0 with apt-get
+Install independent CLI v1..0 with apt-get
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gpg
