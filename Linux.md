@@ -60,7 +60,7 @@ mkdir ~/downloads
 
 ## Install Tanzu CLI and its plugins
 
-Install independent CLI v1..0 with apt-get
+Install independent CLI v1.2.0 with apt-get
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gpg
@@ -70,11 +70,26 @@ sudo apt-get update
 sudo apt-get install tanzu-cli
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
+
+tanzu version
+# version: v1.2.0
+
+which tanzu
+# /usr/bin/tanzu
 ```
 
 Install plugins
 ```bash
-tanzu plugin install --group vmware-tkg/default:v2.4.0 # Agree to terms in the prompt
+tanzu plugin install --group vmware-tkg/default:v2.5.0 # Agree to terms in the prompt
+tanzu plugin list
+#  NAME                DESCRIPTION                                                        TARGET      VERSION  STATUS
+#  isolated-cluster    Prepopulating images/bundle for internet-restricted environments   global      v0.32.1  installed
+#  management-cluster  Kubernetes management cluster operations                           kubernetes  v0.32.1  installed
+#  package             tanzu package management                                           kubernetes  v0.32.1  installed
+#  pinniped-auth       Pinniped authentication operations (usually not directly invoked)  global      v0.32.1  installed
+#  secret              Tanzu secret management                                            kubernetes  v0.32.0  installed
+#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         global      v1.1.0   installed
+#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         kubernetes  v0.32.1  installed
 ```
 
 ## Install Additional Tanzu Kubernetes Grid Tools
@@ -94,17 +109,22 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 # view current files
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
-# download files
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.27.5+vmware.1.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.11.1+vmware.1.gz
+# download CLI files
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.28.4+vmware.1.gz
+docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
+docker exec -t vmw vmw-cli cp velero-linux-v1.12.1+vmware.1.gz
 docker exec -t vmw vmw-cli cp tkg-carvel-tools-linux-amd64.tar.gz
+
+# (optional) download OVAs
+docker exec -t vmw vmw-cli cp ubuntu-2204-kube-v1.28.4+vmware.1-tkg.1-1e7baa840b8869c8bdce0cafff0da59d.ova
+docker exec -t vmw vmw-cli cp photon-5-kube-v1.28.4+vmware.1-tkg.1-10e0361a69712ac4a62217bc87575a1c.ova
+docker exec -t vmw vmw-cli cp ubuntu-2004-kube-v1.27.8+vmware.1-tkg.1-e77cdad8d69e4f76f2ded5e1356235b3.ova
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.27.5+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.27.5+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.27.5+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.28.4+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.28.4+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.28.4+vmware.1 /usr/local/bin/kubectl
 
 gunzip ~/downloads/tkg-carvel-tools-linux-amd64.tar.gz
 mkdir ~/downloads/tkg-carvel
@@ -126,22 +146,22 @@ gunzip ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2.gz
 chmod +x ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2
 sudo cp ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2 /usr/local/bin/ytt
 
-gunzip ~/downloads/velero-linux-v1.11.1+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.11.1+vmware.1
-sudo cp ~/downloads/velero-linux-v1.11.1+vmware.1 /usr/local/bin/velero
+gunzip ~/downloads/velero-linux-v1.12.1+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.12.1+vmware.1
+sudo cp ~/downloads/velero-linux-v1.12.1+vmware.1 /usr/local/bin/velero
 
-gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar.gz
+gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
 mkdir ~/tanzu-crashd
-tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d.tar -C ~/tanzu-crashd
+tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.8.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5-4-g59b239d /usr/local/bin/crashd
+sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.8 /usr/local/bin/crashd
 ```
 
 ## Additional Apps & Utilities
 
 ```bash
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
@@ -174,7 +194,7 @@ kubectl krew install fuzzy
 # Install k9s - https://github.com/derailed/k9s
 mkdir k9s
 cd k9s
-curl -L0 https://github.com/derailed/k9s/releases/download/v0.27.2/k9s_Linux_amd64.tar.gz --output k9s_Linux_amd64.tar.gz
+curl -L0 https://github.com/derailed/k9s/releases/download/v0.32.0/k9s_Linux_amd64.tar.gz --output k9s_Linux_amd64.tar.gz
 gunzip k9s_Linux_amd64.tar
 tar -xvf k9s_Linux_amd64.tar
 sudo mv k9s /usr/local/bin/k9s
@@ -182,7 +202,7 @@ cd ..
 rm -rf k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_amd64 -O /usr/bin/yq
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.42.1/yq_linux_amd64 -O /usr/bin/yq
 sudo chmod +x /usr/bin/yq
 
 cd ~/workspace
@@ -194,18 +214,18 @@ source ~/.bashrc
 cd ~
 
 # Install helm
-curl -LO https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
-gunzip helm-v3.11.0-linux-amd64.tar.gz
-tar -xvf helm-v3.11.0-linux-amd64.tar
+curl -LO https://get.helm.sh/helm-v3.14.2-linux-amd64.tar.gz
+gunzip helm-v3.14.2-linux-amd64.tar.gz
+tar -xvf helm-v3.14.2-linux-amd64.tar
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm helm*
 rm -rf linux-amd64/
 
 
 # Install pivnet - https://github.com/pivotal-cf/pivnet-cli
-curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-linux-amd64-3.0.1
-chmod +x ./pivnet-linux-amd64-3.0.1
-sudo mv pivnet-linux-amd64-3.0.1 /usr/local/bin/pivnet
+curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v4.1.1/pivnet-linux-amd64-4.1.1
+chmod +x ./pivnet-linux-amd64-4.1.1
+sudo mv pivnet-linux-amd64-4.1.1 /usr/local/bin/pivnet
 # Get your Pivnet API Token at the bottom of the [Pivnet Profile Page](https://network.pivotal.io/users/dashboard/edit-profile).  
 pivnet login --api-token $PIVNET_API_TOKEN
 
@@ -218,13 +238,13 @@ sudo apt install httpie
 # Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
   --product-slug='build-service' \
-  --release-version='1.9.1' \
-  --product-file-id=1416327
-chmod +x kp-linux-amd64-0.9.1
-sudo mv kp-linux-amd64-0.9.1 /usr/local/bin/kp
+  --release-version='1.13.0' \
+  --product-file-id=1746630
+chmod +x kp-linux-amd64-0.13.0
+sudo mv kp-linux-amd64-0.13.0 /usr/local/bin/kp
 
 # Install pack
-PACK_VERSION=v0.28.0
+PACK_VERSION=v0.33.2
 curl -LO https://github.com/buildpacks/pack/releases/download/$PACK_VERSION/pack-$PACK_VERSION-linux.tgz
 gunzip pack-$PACK_VERSION-linux.tgz
 tar -xvf pack-$PACK_VERSION-linux.tar
