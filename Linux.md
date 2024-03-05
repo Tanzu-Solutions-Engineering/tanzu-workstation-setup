@@ -60,19 +60,19 @@ mkdir ~/downloads
 
 ## Install Tanzu CLI and its plugins
 
-Install independent CLI v1.2.0 with apt-get
+Install independent CLI v1.1.0 with apt-get
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gpg
 curl -fsSL https://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub | sudo gpg --dearmor -o /etc/apt/keyrings/tanzu-archive-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/tanzu-archive-keyring.gpg] https://storage.googleapis.com/tanzu-cli-os-packages/apt tanzu-cli-jessie main" | sudo tee /etc/apt/sources.list.d/tanzu.list
 sudo apt-get update
-sudo apt-get install tanzu-cli
+sudo apt-get install tanzu-cli=1.1.0
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
 tanzu version
-# version: v1.2.0
+# version: v1.1.0
 
 which tanzu
 # /usr/bin/tanzu
