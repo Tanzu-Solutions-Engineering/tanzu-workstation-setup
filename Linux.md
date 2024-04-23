@@ -80,16 +80,16 @@ which tanzu
 
 Install plugins
 ```bash
-tanzu plugin install --group vmware-tkg/default:v2.5.0 # Agree to terms in the prompt
+tanzu plugin install --group vmware-tkg/default:v2.5.1 # Agree to terms in the prompt
 tanzu plugin list
 #  NAME                DESCRIPTION                                                        TARGET      VERSION  STATUS
-#  isolated-cluster    Prepopulating images/bundle for internet-restricted environments   global      v0.32.1  installed
-#  management-cluster  Kubernetes management cluster operations                           kubernetes  v0.32.1  installed
+#  isolated-cluster    Prepopulating images/bundle for internet-restricted environments   global      v0.32.2  installed
+#  management-cluster  Kubernetes management cluster operations                           kubernetes  v0.32.2  installed
 #  package             tanzu package management                                           kubernetes  v0.32.1  installed
-#  pinniped-auth       Pinniped authentication operations (usually not directly invoked)  global      v0.32.1  installed
+#  pinniped-auth       Pinniped authentication operations (usually not directly invoked)  global      v0.32.2  installed
 #  secret              Tanzu secret management                                            kubernetes  v0.32.0  installed
 #  telemetry           configure cluster-wide settings for vmware tanzu telemetry         global      v1.1.0   installed
-#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         kubernetes  v0.32.1  installed
+#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         kubernetes  v0.32.2  installed
 ```
 
 ## Install Additional Tanzu Kubernetes Grid Tools
@@ -110,21 +110,21 @@ docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$
 docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
 
 # download CLI files
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.28.4+vmware.1.gz
+docker exec -t vmw vmw-cli cp kubectl-linux-v1.28.7+vmware.1.gz
 docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
 docker exec -t vmw vmw-cli cp velero-linux-v1.12.1+vmware.1.gz
 docker exec -t vmw vmw-cli cp tkg-carvel-tools-linux-amd64.tar.gz
 
 # (optional) download OVAs
-docker exec -t vmw vmw-cli cp ubuntu-2204-kube-v1.28.4+vmware.1-tkg.1-1e7baa840b8869c8bdce0cafff0da59d.ova
-docker exec -t vmw vmw-cli cp photon-5-kube-v1.28.4+vmware.1-tkg.1-10e0361a69712ac4a62217bc87575a1c.ova
-docker exec -t vmw vmw-cli cp ubuntu-2004-kube-v1.27.8+vmware.1-tkg.1-e77cdad8d69e4f76f2ded5e1356235b3.ova
+docker exec -t vmw vmw-cli cp ubuntu-2204-kube-v1.28.7+vmware.1-tkg.3-ce5a5137e5d37570ca3aca44843423a0.ova
+docker exec -t vmw vmw-cli cp photon-5-kube-v1.28.7+vmware.1-tkg.3-50fb7614ebf10b4a98fbb31220ac0fb1.ova
+docker exec -t vmw vmw-cli cp ubuntu-2004-kube-v1.27.11+vmware.1-tkg.3-a3639eb6364827cd45898ad984e77d88.ova
 
 # stop vmw-cli container
 docker rm -f vmw
 
-gunzip ~/downloads/kubectl-linux-v1.28.4+vmware.1.gz
-chmod +x ~/downloads/kubectl-linux-v1.28.4+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.28.4+vmware.1 /usr/local/bin/kubectl
+gunzip ~/downloads/kubectl-linux-v1.28.7+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.28.7+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.28.7+vmware.1 /usr/local/bin/kubectl
 
 gunzip ~/downloads/tkg-carvel-tools-linux-amd64.tar.gz
 mkdir ~/downloads/tkg-carvel
