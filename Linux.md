@@ -94,35 +94,21 @@ tanzu plugin list
 
 ## Install Additional Tanzu Kubernetes Grid Tools
 
-All TKG cli's are avilable at https://www.vmware.com/go/get-tkg.  We will use the [vmw-cli OSS container](https://github.com/apnex/vmw-cli) to retrieve them.  You will need a VMware Customer Connect username and password.
+All other TKG required cli's are avilable at [Tanzu Kubernetes Grid 2. downloads](https://support.broadcom.com/group/ecx/productfiles?displayGroup=VMware%20Tanzu%20Kubernetes%20Grid%20-%20Standard&release=2.x&os=&servicePk=202475&language=EN&groupId=204074).
 
-From linux jumpbox...
+Make sure you download the following artifacts in the `~/downloads` fodlder:
+- kubectl-linux-v1.28.7+vmware.1.gz
+- crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
+- velero-linux-v1.12.1+vmware.1.gz
+- tkg-carvel-tools-linux-amd64.tar.gz
 
-```bash
-export VMWARE_CUSTOMER_CONNECT_USER=<your username>
-export VMWARE_CUSTOMER_CONNECT_PASSWORD=<your password>
+Optionally, also download these OVAs
+- ubuntu-2204-kube-v1.28.7+vmware.1-tkg.3-ce5a5137e5d37570ca3aca44843423a0.ova
+- photon-5-kube-v1.28.7+vmware.1-tkg.3-50fb7614ebf10b4a98fbb31220ac0fb1.ova
+- ubuntu-2004-kube-v1.27.11+vmware.1-tkg.3-a3639eb6364827cd45898ad984e77d88.ova
 
-cd ~/downloads
-
-docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$VMWARE_CUSTOMER_CONNECT_PASSWORD -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
-
-# view current files
-docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
-
-# download CLI files
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.28.7+vmware.1.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.12.1+vmware.1.gz
-docker exec -t vmw vmw-cli cp tkg-carvel-tools-linux-amd64.tar.gz
-
-# (optional) download OVAs
-docker exec -t vmw vmw-cli cp ubuntu-2204-kube-v1.28.7+vmware.1-tkg.3-ce5a5137e5d37570ca3aca44843423a0.ova
-docker exec -t vmw vmw-cli cp photon-5-kube-v1.28.7+vmware.1-tkg.3-50fb7614ebf10b4a98fbb31220ac0fb1.ova
-docker exec -t vmw vmw-cli cp ubuntu-2004-kube-v1.27.11+vmware.1-tkg.3-a3639eb6364827cd45898ad984e77d88.ova
-
-# stop vmw-cli container
-docker rm -f vmw
-
+Run these commands to install the CLIs/tools:
+```
 gunzip ~/downloads/kubectl-linux-v1.28.7+vmware.1.gz
 chmod +x ~/downloads/kubectl-linux-v1.28.7+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.28.7+vmware.1 /usr/local/bin/kubectl
 
