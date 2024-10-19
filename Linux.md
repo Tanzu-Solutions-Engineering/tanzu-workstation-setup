@@ -36,7 +36,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 # Post install permissions
-sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 sudo reboot now
@@ -59,79 +58,114 @@ git clone https://github.com/Tanzu-Solutions-Engineering/tanzu-workstation-setup
 mkdir ~/downloads
 ```
 
-## Tanzu Kubernetes Grid Packages
+## Install Tanzu CLI and its plugins
 
-All TKG cli's are avilable at https://www.vmware.com/go/get-tkg.  We will use the [vmw-cli OSS container](https://github.com/apnex/vmw-cli) to retrieve them.  You will need a VMware Customer Connect username and password.
-
-From linux jumpbox...
-
+Install independent CLI v1.1.0 with apt-get
 ```bash
-export VMWARE_CUSTOMER_CONNECT_USER=<your username>
-export VMWARE_CUSTOMER_CONNECT_PASSWORD=<your password>
-
-cd ~/downloads
-
-docker run -itd --name vmw -e VMWUSER=$VMWARE_CUSTOMER_CONNECT_USER -e VMWPASS=$VMWARE_CUSTOMER_CONNECT_PASSWORD -v ${PWD}:/files --entrypoint=sh apnex/vmw-cli
-
-# view current files
-docker exec -t vmw vmw-cli ls vmware_tanzu_kubernetes_grid
-
-# download files
-docker exec -t vmw vmw-cli cp tanzu-cli-bundle-linux-amd64.tar.gz
-docker exec -t vmw vmw-cli cp kubectl-linux-v1.23.8+vmware.2.gz
-docker exec -t vmw vmw-cli cp crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
-docker exec -t vmw vmw-cli cp velero-linux-v1.8.1+vmware.1.gz
-
-# stop vmw-cli container
-docker rm -f vmw
-
-gunzip ~/downloads/kubectl-linux-v1.23.8+vmware.2.gz
-chmod +x ~/downloads/kubectl-linux-v1.23.8+vmware.2 && sudo mv ~/downloads/kubectl-linux-v1.23.8+vmware.2 /usr/local/bin/kubectl
-
-mkdir ~/tanzu-cli
-
-gunzip ~/downloads/tanzu-cli-bundle-linux-amd64.tar.gz
-tar -xvf ~/downloads/tanzu-cli-bundle-linux-amd64.tar -C ~/tanzu-cli
-sudo install ~/tanzu-cli/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
-tanzu plugin sync
-
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gpg
+curl -fsSL https://packages.vmware.com/tools/keys/VMWARE-PACKAGING-GPG-RSA-KEY.pub | sudo gpg --dearmor -o /etc/apt/keyrings/tanzu-archive-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/tanzu-archive-keyring.gpg] https://storage.googleapis.com/tanzu-cli-os-packages/apt tanzu-cli-jessie main" | sudo tee /etc/apt/sources.list.d/tanzu.list
+sudo apt-get update
+sudo apt-get install tanzu-cli=1.1.0
 echo "export TANZU_CLI_PINNIPED_AUTH_LOGIN_SKIP_BROWSER=true" >> ~/.bashrc
 source ~/.bashrc
 
-gunzip ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1
-sudo cp ~/tanzu-cli/cli/imgpkg-linux-amd64-v0.29.0+vmware.1 /usr/local/bin/imgpkg
-gunzip ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kapp-linux-amd64-v0.49.0+vmware.1 /usr/local/bin/kapp
-gunzip ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1
-sudo cp ~/tanzu-cli/cli/kbld-linux-amd64-v0.34.0+vmware.1 /usr/local/bin/kbld
-gunzip ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1.gz
-chmod +x ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1
-sudo cp ~/tanzu-cli/cli/ytt-linux-amd64-v0.41.1+vmware.1 /usr/local/bin/ytt
+tanzu version
+# version: v1.1.0
 
-gunzip ~/downloads/velero-linux-v1.8.1+vmware.1.gz
-chmod +x ~/downloads/velero-linux-v1.8.1+vmware.1
-sudo cp ~/downloads/velero-linux-v1.8.1+vmware.1 /usr/local/bin/velero
+which tanzu
+# /usr/bin/tanzu
+```
 
-gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar.gz
+Install plugins
+```bash
+tanzu plugin install --group vmware-tkg/default:v2.5.1 # Agree to terms in the prompt
+tanzu plugin list
+#  NAME                DESCRIPTION                                                        TARGET      VERSION  STATUS
+#  isolated-cluster    Prepopulating images/bundle for internet-restricted environments   global      v0.32.2  installed
+#  management-cluster  Kubernetes management cluster operations                           kubernetes  v0.32.2  installed
+#  package             tanzu package management                                           kubernetes  v0.32.1  installed
+#  pinniped-auth       Pinniped authentication operations (usually not directly invoked)  global      v0.32.2  installed
+#  secret              Tanzu secret management                                            kubernetes  v0.32.0  installed
+#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         global      v1.1.0   installed
+#  telemetry           configure cluster-wide settings for vmware tanzu telemetry         kubernetes  v0.32.2  installed
+```
+
+## Install Additional Tanzu Kubernetes Grid Tools
+
+All other TKG required cli's are avilable at [Tanzu Kubernetes Grid 2. downloads](https://support.broadcom.com/group/ecx/productfiles?displayGroup=VMware%20Tanzu%20Kubernetes%20Grid%20-%20Standard&release=2.x&os=&servicePk=202475&language=EN&groupId=204074).
+
+Make sure you download the following artifacts in the `~/downloads` fodlder:
+- kubectl-linux-v1.28.7+vmware.1.gz
+- crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
+- velero-linux-v1.12.1+vmware.1.gz
+- tkg-carvel-tools-linux-amd64.tar.gz
+
+Optionally, also download these OVAs
+- ubuntu-2204-kube-v1.28.7+vmware.1-tkg.3-ce5a5137e5d37570ca3aca44843423a0.ova
+- photon-5-kube-v1.28.7+vmware.1-tkg.3-50fb7614ebf10b4a98fbb31220ac0fb1.ova
+- ubuntu-2004-kube-v1.27.11+vmware.1-tkg.3-a3639eb6364827cd45898ad984e77d88.ova
+
+Run these commands to install the CLIs/tools:
+```
+gunzip ~/downloads/kubectl-linux-v1.28.7+vmware.1.gz
+chmod +x ~/downloads/kubectl-linux-v1.28.7+vmware.1 && sudo mv ~/downloads/kubectl-linux-v1.28.7+vmware.1 /usr/local/bin/kubectl
+
+gunzip ~/downloads/tkg-carvel-tools-linux-amd64.tar.gz
+mkdir ~/downloads/tkg-carvel
+tar -xvf ~/downloads/tkg-carvel-tools-linux-amd64.tar -C ~/downloads/tkg-carvel
+
+gunzip ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/imgpkg-linux-amd64-v0.36.0+vmware.2 /usr/local/bin/imgpkg
+
+gunzip ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/kapp-linux-amd64-v0.55.0+vmware.2 /usr/local/bin/kapp
+
+gunzip ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/kbld-linux-amd64-v0.37.0+vmware.2 /usr/local/bin/kbld
+
+gunzip ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2.gz
+chmod +x ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2
+sudo cp ~/downloads/tkg-carvel/cli/ytt-linux-amd64-v0.45.0+vmware.2 /usr/local/bin/ytt
+
+gunzip ~/downloads/velero-linux-v1.12.1+vmware.1.gz
+chmod +x ~/downloads/velero-linux-v1.12.1+vmware.1
+sudo cp ~/downloads/velero-linux-v1.12.1+vmware.1 /usr/local/bin/velero
+
+gunzip ~/downloads/crashd-linux-amd64-v0.3.7+vmware.8.tar.gz
 mkdir ~/tanzu-crashd
-tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.5.tar -C ~/tanzu-crashd
+tar -xvf ~/downloads/crashd-linux-amd64-v0.3.7+vmware.8.tar -C ~/tanzu-crashd
 # for some reason, the following version has +, while the others have -
-sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.5 /usr/local/bin/crashd
+sudo cp ~/tanzu-crashd/crashd/crashd-linux-amd64-v0.3.7+vmware.8 /usr/local/bin/crashd
 ```
 
 ## Additional Apps & Utilities
 
 ```bash
 # Install kind
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
 # Helpful Alias
 echo "alias k=kubectl" >> ~/.bashrc
+source ~/.bashrc
+
+# Install krew
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
 # Install kubectx/kubens
@@ -140,21 +174,21 @@ sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 # Install fzf (for fuzy finder kubectx)
-sudo apt-get update
-sudo apt-get install fzf
+kubectl krew update
+kubectl krew install fuzzy
 
 # Install k9s - https://github.com/derailed/k9s
 mkdir k9s
 cd k9s
-curl -L0 https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Linux_x86_64.tar.gz --output k9s_Linux_x86_64.tar.gz
-gunzip k9s_Linux_x86_64.tar.gz
-tar -xvf k9s_Linux_x86_64.tar
+curl -L0 https://github.com/derailed/k9s/releases/download/v0.32.0/k9s_Linux_amd64.tar.gz --output k9s_Linux_amd64.tar.gz
+gunzip k9s_Linux_amd64.tar
+tar -xvf k9s_Linux_amd64.tar
 sudo mv k9s /usr/local/bin/k9s
 cd ..
 rm -rf k9s
 
 # Install yq - per https://github.com/mikefarah/yq
-sudo wget https://github.com/mikefarah/yq/releases/download/v4.21.1/yq_linux_amd64 -O /usr/bin/yq
+sudo wget https://github.com/mikefarah/yq/releases/download/v4.42.1/yq_linux_amd64 -O /usr/bin/yq
 sudo chmod +x /usr/bin/yq
 
 cd ~/workspace
@@ -166,18 +200,18 @@ source ~/.bashrc
 cd ~
 
 # Install helm
-curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
-gunzip helm-v3.8.0-linux-amd64.tar.gz
-tar -xvf helm-v3.8.0-linux-amd64.tar
+curl -LO https://get.helm.sh/helm-v3.14.2-linux-amd64.tar.gz
+gunzip helm-v3.14.2-linux-amd64.tar.gz
+tar -xvf helm-v3.14.2-linux-amd64.tar
 sudo mv linux-amd64/helm /usr/local/bin/helm
 rm helm*
 rm -rf linux-amd64/
 
 
 # Install pivnet - https://github.com/pivotal-cf/pivnet-cli
-curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v3.0.1/pivnet-linux-amd64-3.0.1
-chmod +x ./pivnet-linux-amd64-3.0.1
-sudo mv pivnet-linux-amd64-3.0.1 /usr/local/bin/pivnet
+curl -LO https://github.com/pivotal-cf/pivnet-cli/releases/download/v4.1.1/pivnet-linux-amd64-4.1.1
+chmod +x ./pivnet-linux-amd64-4.1.1
+sudo mv pivnet-linux-amd64-4.1.1 /usr/local/bin/pivnet
 # Get your Pivnet API Token at the bottom of the [Pivnet Profile Page](https://network.pivotal.io/users/dashboard/edit-profile).  
 pivnet login --api-token $PIVNET_API_TOKEN
 
@@ -189,19 +223,14 @@ sudo apt install httpie
 
 # Install kp - https://network.tanzu.vmware.com/products/build-service/
 pivnet download-product-files \
-   --product-slug='build-service' \
-   --release-version='1.6.1' \
-   --product-file-id=1241251
-chmod +x kp-linux-0.6.0
-sudo mv kp-linux-0.6.0 /usr/local/bin/kp
-
-# Install tmc
-curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.5.1-7eec047c/linux/x64/tmc
-chmod +x ./tmc
-sudo mv tmc /usr/local/bin/tmc
+  --product-slug='build-service' \
+  --release-version='1.13.0' \
+  --product-file-id=1746630
+chmod +x kp-linux-amd64-0.13.0
+sudo mv kp-linux-amd64-0.13.0 /usr/local/bin/kp
 
 # Install pack
-PACK_VERSION=v0.24.0
+PACK_VERSION=v0.33.2
 curl -LO https://github.com/buildpacks/pack/releases/download/$PACK_VERSION/pack-$PACK_VERSION-linux.tgz
 gunzip pack-$PACK_VERSION-linux.tgz
 tar -xvf pack-$PACK_VERSION-linux.tar
@@ -209,16 +238,8 @@ chmod +x pack
 sudo mv pack /usr/local/bin/
 rm pack*
 
-# Install fly
-curl -LO https://github.com/concourse/concourse/releases/download/v6.7.5/fly-6.7.5-linux-amd64.tgz
-gunzip fly-6.7.5-linux-amd64.tgz
-tar -xvf fly-6.7.5-linux-amd64.tar
-chmod +x fly
-sudo mv fly /usr/local/bin/
-rm fly*
-
 # Install JDK
-sudo apt install openjdk-11-jdk
+sudo apt install openjdk-17-jdk
 
 # Install govc tool - https://github.com/vmware/govmomi/blob/master/govc/README.md#binaries
 curl -LO "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz"
@@ -236,7 +257,7 @@ rm govc_Linux_x86_64.tar.gz README.md LICENSE.txt CHANGELOG.md
   - put it on Cluster1
   - Guest OS: choose Linux - Ubuntu Linux x64
   - Customize Hardware:
-    - cpu 2, ram 6GB, disk 30GB
+    - cpu 2, ram 6GB, disk 100GB
     - VM Network
     - Add a second CD Drive and choose ISO
 - Power on jumpbox
